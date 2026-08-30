@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book a Service — VOLTERRA</title>
+<meta name="description" content="Book your e-bike service in Berlin. Choose your service, date and time.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<style>
+:root{
+  --color-primary:#B7F34A; --color-dark:#111312; --color-bg:#F5F5F2; --color-white:#FFFFFF;
+  --color-text-secondary:#6B706C; --color-border:rgba(17,19,18,0.08); --color-border-dark:rgba(255,255,255,0.12);
+  --radius-xl:28px; --radius-lg:18px; --radius-pill:100px; --shadow-card:0 8px 40px rgba(17,19,18,0.06);
+  --max-w:1280px; --pad-x:24px; --error:#D14343;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:Inter,system-ui,sans-serif;background:var(--color-bg);color:var(--color-dark);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+h1,h2,h3,h4{font-family:Manrope,sans-serif;letter-spacing:-0.03em}
+a{color:inherit;text-decoration:none} img{display:block;max-width:100%} button{border:0;background:none;font:inherit;cursor:pointer}
+.container{width:100%;max-width:var(--max-w);margin:0 auto;padding-left:var(--pad-x);padding-right:var(--pad-x)}
+.eyebrow{font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--color-text-secondary)}
+.btn-primary{display:inline-flex;align-items:center;gap:10px;background:var(--color-primary);color:var(--color-dark);padding:14px 22px;border-radius:var(--radius-pill);font-weight:600;font-size:14px;transition:transform .18s, box-shadow .18s;white-space:nowrap;justify-content:center}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(183,243,74,0.35)}
+.btn-secondary{display:inline-flex;align-items:center;gap:10px;border:1px solid var(--color-border);background:var(--color-white);padding:14px 22px;border-radius:var(--radius-pill);font-weight:600;font-size:14px;transition:.18s;justify-content:center}
+.btn-secondary:hover{border-color:var(--color-dark);transform:translateY(-1px)}
+.btn-dark{display:inline-flex;align-items:center;gap:10px;background:var(--color-dark);color:var(--color-white);padding:14px 22px;border-radius:var(--radius-pill);font-weight:600;font-size:14px}
+.announce{background:var(--color-dark);color:#C8CFC9;font-size:12.5px;text-align:center;padding:10px 16px;display:flex;justify-content:center;align-items:center;gap:10px}
+.announce strong{color:var(--color-white);font-weight:600} .announce .dot{width:4px;height:4px;border-radius:50%;background:var(--color-primary);display:inline-block}
+.nav-wrap{position:sticky;top:0;z-index:50;background:rgba(245,245,242,0.88);backdrop-filter:saturate(180%) blur(16px);border-bottom:1px solid var(--color-border)}
+.nav{height:68px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-family:Manrope,sans-serif;font-weight:800;font-size:20px;letter-spacing:-0.04em;display:flex;align-items:center;gap:8px}
+.logo-mark{width:28px;height:28px;background:var(--color-dark);color:var(--color-primary);display:grid;place-items:center;border-radius:8px;font-size:12px;font-weight:800}
+.nav-links{display:flex;align-items:center;gap:28px}
+.nav-links a{font-size:14px;font-weight:500;opacity:0.85;transition:.18s} .nav-links a:hover{opacity:1}
+.nav-links a.active{opacity:1;font-weight:600;position:relative} .nav-links a.active:after{content:'';position:absolute;left:0;right:0;bottom:-4px;height:2px;background:var(--color-dark)}
+.nav-actions{display:flex;align-items:center;gap:12px}
+.nav-hamburger{display:none;width:40px;height:40px;border-radius:50%;border:1px solid var(--color-border);background:var(--color-white);place-items:center}
+.mobile-drawer{position:fixed;inset:0;z-index:60;background:var(--color-bg);transform:translateX(100%);transition:transform .36s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column}
+.mobile-drawer.open{transform:translateX(0)}
+.mobile-drawer-head{height:68px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;border-bottom:1px solid var(--color-border)}
+.mobile-links{padding:32px 24px;display:flex;flex-direction:column;gap:6px}
+.mobile-links a{font-family:Manrope,sans-serif;font-size:34px;font-weight:700;letter-spacing:-0.03em;line-height:1.1;padding:8px 0;border-bottom:1px solid var(--color-border)}
+.mobile-foot{margin-top:auto;padding:24px;border-top:1px solid var(--color-border);display:flex;flex-direction:column;gap:14px}
+.intro{padding:22px 0 16px}
+.intro-inner{background:var(--color-white);border:1px solid var(--color-border);border-radius:var(--radius-xl);padding:28px;display:flex;justify-content:space-between;gap:20px;align-items:center}
+.intro-inner h1{font-size:clamp(28px,3vw,40px);line-height:0.95;margin-bottom:8px}
+.intro-inner p{color:var(--color-text-secondary);font-size:15px;line-height:1.5;max-width:460px}
+.booking-layout{display:grid;grid-template-columns:1.15fr 0.85fr;gap:24px;align-items:start;margin-top:18px}
+.form-card{background:var(--color-white);border:1px solid var(--color-border);border-radius:var(--radius-xl);padding:22px}
+.section-label{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--color-text-secondary);font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.section-label span.num{width:20px;height:20px;background:var(--color-dark);color:var(--color-white);border-radius:50%;display:grid;place-items:center;font-size:10px}
+.form-group{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:22px}
+.form-group.full{grid-template-columns:1fr}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-size:12px;font-weight:600}
+.field input,.field select,.field textarea{padding:12px 14px;border-radius:12px;border:1px solid var(--color-border);background:var(--color-bg);font-size:14px;outline:none;transition:border .18s, background .18s}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--color-dark);background:var(--color-white)}
+.field textarea{resize:vertical;min-height:96px}
+.field small.error{font-size:11px;color:var(--error);display:none}
+.field.invalid input,.field.invalid select,.field.invalid textarea{border-color:var(--error);background:#FFF6F6}
+.field.invalid small.error{display:block}
+.service-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:22px}
+.service-opt{position:relative;border:1px solid var(--color-border);background:var(--color-bg);border-radius:14px;padding:14px 12px;cursor:pointer;transition:.18s;text-align:left}
+.service-opt:hover{border-color:var(--color-dark);transform:translateY(-1px)}
+.service-opt.selected{border-color:var(--color-dark);background:var(--color-dark);color:var(--color-white)}
+.service-opt.selected .svc-icon{background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.18)}
+.service-opt input{position:absolute;opacity:0;pointer-events:none}
+.svc-icon{width:28px;height:28px;border-radius:8px;background:var(--color-white);border:1px solid var(--color-border);display:grid;place-items:center;font-size:12px;margin-bottom:10px}
+.service-opt b{font-size:13px;display:block;margin-bottom:2px} .service-opt span{font-size:11px;color:var(--color-text-secondary);line-height:1.3;display:block}
+.service-opt.selected span{color:#9BA49C}
+.prefill{background:#111312;color:#fff;border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:12px;margin-bottom:18px;border:1px solid var(--color-border-dark)}
+.prefill img{width:48px;height:48px;border-radius:10px;object-fit:cover;background:#EEEDE8;border:1px solid var(--color-border-dark)}
+.prefill .ph{width:48px;height:48px;border-radius:10px;background:#222;display:grid;place-items:center;font-size:10px;color:#9BA49C;border:1px solid var(--color-border-dark)}
+.prefill b{font-size:13px} .prefill span{font-size:11px;color:#9BA49C;display:block}
+.sticky-col{position:sticky;top:86px;display:flex;flex-direction:column;gap:18px}
+.summary-card{background:var(--color-white);border:1px solid var(--color-border);border-radius:20px;padding:20px}
+.summary-card h3{font-size:16px;margin-bottom:12px}
+.summary-row{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--color-border);font-size:13px}
+.summary-row:last-child{border-bottom:0}
+.summary-row span:first-child{color:var(--color-text-secondary)}
+.summary-note{font-size:11px;color:var(--color-text-secondary);margin-top:12px;line-height:1.4;background:var(--color-bg);padding:10px 12px;border-radius:10px;border:1px solid var(--color-border)}
+.trust-card{background:var(--color-dark);color:var(--color-white);border-radius:20px;padding:20px}
+.trust-card h4{font-size:15px;margin-bottom:10px} .trust-card p{font-size:12px;color:#9BA49C;line-height:1.5;margin-bottom:12px}
+.steps{display:grid;gap:10px}
+.step{display:flex;gap:10px}
+.step .n{width:22px;height:22px;border-radius:50%;background:var(--color-primary);color:var(--color-dark);display:grid;place-items:center;font-size:10px;font-weight:800;flex:0 0 22px}
+.step b{font-size:12px;display:block} .step span{font-size:11px;color:#9BA49C}
+.help-card{background:var(--color-white);border:1px solid var(--color-border);border-radius:20px;padding:20px}
+.help-card h4{font-size:14px;margin-bottom:8px} .help-card p{font-size:12px;color:var(--color-text-secondary);line-height:1.5;margin-bottom:12px}
+.contact-mini{display:flex;gap:10px;flex-wrap:wrap}
+.contact-mini div{font-size:12px;background:var(--color-bg);border:1px solid var(--color-border);padding:8px 10px;border-radius:10px}
+.modal-backdrop{position:fixed;inset:0;background:rgba(17,19,18,0.42);backdrop-filter:blur(6px);z-index:70;display:none;place-items:center;padding:20px}
+.modal-backdrop.open{display:grid}
+.modal{background:var(--color-white);border-radius:24px;max-width:480px;width:100%;padding:28px;border:1px solid var(--color-border);box-shadow:0 24px 80px rgba(0,0,0,0.18);animation:pop .36s cubic-bezier(.2,.8,.2,1)}
+@keyframes pop{from{transform:translateY(10px) scale(.97);opacity:0}to{transform:translateY(0) scale(1);opacity:1}}
+.check{width:48px;height:48px;border-radius:50%;background:var(--color-primary);display:grid;place-items:center;margin-bottom:14px;font-size:18px}
+.modal h2{font-size:24px;margin-bottom:6px} .modal p{font-size:14px;color:var(--color-text-secondary);line-height:1.5;margin-bottom:16px}
+.modal .ref{background:var(--color-bg);border:1px dashed var(--color-border);border-radius:12px;padding:10px 12px;font-family:monospace;font-size:13px;margin-bottom:16px;text-align:center}
+.modal-actions{display:flex;gap:10px;flex-wrap:wrap}
+footer{padding:56px 0 28px;border-top:1px solid var(--color-border);margin-top:40px}
+.footer-grid{display:grid;grid-template-columns:1.4fr 0.8fr 0.8fr 1fr;gap:28px;margin-bottom:36px}
+.footer-brand b{font-family:Manrope,sans-serif;font-size:20px;letter-spacing:-0.04em}
+.footer-brand p{color:var(--color-text-secondary);font-size:13px;margin-top:8px;line-height:1.5;max-width:260px}
+.footer-col h5{font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--color-text-secondary);margin-bottom:16px}
+.footer-col a{display:block;font-size:14px;padding:5px 0;opacity:0.9} .footer-col a:hover{opacity:1;text-decoration:underline;text-underline-offset:4px}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;gap:16px;padding-top:22px;border-top:1px solid var(--color-border);flex-wrap:wrap}
+.footer-bottom span{font-size:12px;color:var(--color-text-secondary)}
+.socials{display:flex;gap:10px} .socials a{width:36px;height:36px;border-radius:50%;border:1px solid var(--color-border);display:grid;place-items:center;background:var(--color-white);transition:.18s}
+.socials a:hover{border-color:var(--color-dark)}
+@media(max-width:1024px){.booking-layout{grid-template-columns:1fr} .sticky-col{position:static} .service-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:900px){.nav-links,.nav-actions .btn-primary{display:none} .nav-hamburger{display:grid} .intro-inner{flex-direction:column;align-items:flex-start} .form-group{grid-template-columns:1fr}}
+@media(max-width:640px){:root{--pad-x:16px} .service-grid{grid-template-columns:1fr 1fr} .footer-grid{grid-template-columns:1fr 1fr}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto !important;transition:none !important;animation:none !important}}
+</style>
+</head>
+<body>
+
+<div class="announce"><span class="dot"></span><span><strong>Inspected used e-bikes.</strong> Expert service. Ready to ride.</span></div>
+
+<div class="nav-wrap">
+  <div class="container nav">
+    <a class="logo" href="index.html"><span class="logo-mark">V</span> VOLTERRA</a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="index.html">Home</a>
+      <a href="bikes.html">Used E-Bikes</a>
+      <a href="services.html">Services</a>
+      <a class="active" href="book-service.html">Book Service</a>
+    </nav>
+    <div class="nav-actions">
+      <a class="btn-secondary" href="bikes.html"><i class="fa-solid fa-bicycle"></i> Browse Bikes</a>
+      <button class="nav-hamburger" id="openMenu" aria-label="Open menu"><i class="fa-solid fa-bars"></i></button>
+    </div>
+  </div>
+</div>
+
+<div class="mobile-drawer" id="drawer">
+  <div class="mobile-drawer-head">
+    <span class="logo"><span class="logo-mark">V</span> VOLTERRA</span>
+    <button class="nav-hamburger" style="display:grid" id="closeMenu" aria-label="Close menu"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  <div class="mobile-links">
+    <a href="index.html">Home</a>
+    <a href="bikes.html">Used E-Bikes</a>
+    <a href="services.html">Services</a>
+    <a href="book-service.html">Book Service</a>
+    <a href="admin.html" style="opacity:0.5">Admin Demo</a>
+  </div>
+  <div class="mobile-foot">
+    <a class="btn-dark" style="justify-content:center" href="book-service.html">Book a Service</a>
+    <p class="eyebrow">Ride Further. Live Electric.</p>
+  </div>
+</div>
+
+<main class="container">
+  <section class="intro">
+    <div class="intro-inner">
+      <div>
+        <div class="eyebrow" style="margin-bottom:10px">Service booking · Berlin workshop</div>
+        <h1>Book Your E-Bike Service</h1>
+        <p>Tell us what your e-bike needs and choose a convenient time. We'll take care of the rest. Request is confirmed by our team within 24h.</p>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center">
+        <span class="eyebrow">127-point check · 6-month warranty</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="booking-layout">
+    <form id="bookingForm" class="form-card" novalidate>
+      <div id="prefillBanner" style="display:none"></div>
+
+      <div class="section-label"><span class="num">1</span> Customer Information</div>
+      <div class="form-group">
+        <div class="field" id="f-name"><label for="fullName">Full Name *</label><input id="fullName" name="fullName" type="text" placeholder="John Smith" autocomplete="name"><small class="error">Please enter your full name.</small></div>
+        <div class="field" id="f-phone"><label for="phone">Phone Number *</label><input id="phone" name="phone" type="tel" placeholder="+1 (555) 123-4567" autocomplete="tel"><small class="error">Enter a valid phone (at least 8 digits).</small></div>
+      </div>
+      <div class="form-group full">
+        <div class="field" id="f-email"><label for="email">Email *</label><input id="email" name="email" type="email" placeholder="john@example.com" autocomplete="email"><small class="error">Please enter a valid email.</small></div>
+      </div>
+
+      <div class="section-label" style="margin-top:10px"><span class="num">2</span> E-Bike Information</div>
+      <div class="form-group">
+        <div class="field" id="f-brand"><label for="bikeBrand">Bike Brand *</label><input id="bikeBrand" name="bikeBrand" list="brandList" placeholder="Specialized, Canyon, etc."><datalist id="brandList"></datalist><small class="error">Please enter bike brand.</small></div>
+        <div class="field" id="f-model"><label for="bikeModel">Bike Model *</label><input id="bikeModel" name="bikeModel" placeholder="Turbo Vado, Pathlite:ON"><small class="error">Please enter bike model.</small></div>
+      </div>
+      <div class="form-group full">
+        <div class="field" id="f-year"><label for="bikeYear">Bike Year (optional)</label><input id="bikeYear" name="bikeYear" type="number" min="2015" max="2026" placeholder="2023"></div>
+      </div>
+
+      <div class="section-label" style="margin-top:10px"><span class="num">3</span> Service Type *</div>
+      <div class="service-grid" id="serviceGrid"></div>
+      <div class="field" id="f-service" style="margin-bottom:22px"><small class="error">Please choose a service.</small></div>
+
+      <div class="section-label"><span class="num">4</span> Appointment</div>
+      <div class="form-group">
+        <div class="field" id="f-date"><label for="prefDate">Preferred Date *</label><input id="prefDate" name="prefDate" type="date"><small class="error">Please select a future date.</small></div>
+        <div class="field" id="f-time"><label for="prefTime">Preferred Time *</label><select id="prefTime" name="prefTime"><option value="">Select time</option><option>09:00 AM</option><option>10:00 AM</option><option>11:00 AM</option><option>12:00 PM</option><option>01:00 PM</option><option>02:00 PM</option><option>03:00 PM</option><option>04:00 PM</option><option>05:00 PM</option></select><small class="error">Please select a time.</small></div>
+      </div>
+
+      <div class="section-label"><span class="num">5</span> Additional Details</div>
+      <div class="form-group full">
+        <div class="field"><label for="notes">Tell us more about the issue</label><textarea id="notes" name="notes" placeholder="Strange noise from motor, brake feels weak, battery range dropped..."></textarea></div>
+      </div>
+
+      <button type="submit" class="btn-primary" style="width:100%;padding:16px;margin-top:6px;font-size:15px">Request Appointment <i class="fa-solid fa-arrow-right"></i></button>
+      <p style="font-size:11px;color:var(--color-text-secondary);text-align:center;margin-top:10px">Appointment times are requests and will be confirmed by our team.</p>
+    </form>
+
+    <div class="sticky-col">
+      <div class="summary-card">
+        <h3>Booking Summary</h3>
+        <div class="summary-row"><span>Service</span><span id="sumService">—</span></div>
+        <div class="summary-row"><span>Date</span><span id="sumDate">—</span></div>
+        <div class="summary-row"><span>Time</span><span id="sumTime">—</span></div>
+        <div class="summary-row"><span>Bike</span><span id="sumBike">—</span></div>
+        <div class="summary-note">This is a booking <b>request</b>, not instant confirmation. We'll contact you to confirm the appointment and price before any work begins.</div>
+      </div>
+
+      <div class="trust-card">
+        <h4>What happens next?</h4>
+        <p>Clear process, no surprises. We keep you updated.</p>
+        <div class="steps">
+          <div class="step"><span class="n">1</span><div><b>Request your service</b><span>Submit this form with details</span></div></div>
+          <div class="step"><span class="n">2</span><div><b>Our team reviews</b><span>We check availability & parts</span></div></div>
+          <div class="step"><span class="n">3</span><div><b>We contact you</b><span>Confirmation call/email within 24h</span></div></div>
+          <div class="step"><span class="n">4</span><div><b>Bring your e-bike in</b><span>At agreed time — Chausseestr. 45</span></div></div>
+        </div>
+      </div>
+
+      <div class="help-card">
+        <h4>Need help before booking?</h4>
+        <p>Not sure which service you need? Tell us the symptom — we will recommend the right check.</p>
+        <div class="contact-mini">
+          <div><i class="fa-solid fa-phone"></i> +1 (555) 123-4567</div>
+          <div><i class="fa-solid fa-envelope"></i> hello@volterra.bike</div>
+        </div>
+        <div style="margin-top:12px"><a class="btn-secondary" style="width:100%" href="mailto:hello@volterra.bike"><i class="fa-solid fa-paper-plane"></i> Contact Us</a></div>
+        <div style="margin-top:14px;border:1px solid var(--color-border);border-radius:12px;overflow:hidden;background:#EEF0EB;display:grid;place-items:center;aspect-ratio:1.6/1;color:var(--color-text-secondary);font-size:11px;position:relative">
+          <img src="assets/images/services/service-2.jpg" alt="Workshop" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" onerror="this.style.display='none'">
+          <span style="position:relative;z-index:1"><i class="fa-solid fa-image"></i> service-2.jpg — coming soon</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div class="modal-backdrop" id="successModal" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="successTitle">
+    <div class="check"><i class="fa-solid fa-check"></i></div>
+    <h2 id="successTitle">Booking Request Received</h2>
+    <p id="successText">Thanks! Your service request has been submitted. We'll contact you to confirm.</p>
+    <div class="ref" id="refNumber">EB-2026-001</div>
+    <div id="successDetails" style="font-size:13px;line-height:1.6;margin-bottom:18px;background:var(--color-bg);border:1px solid var(--color-border);border-radius:12px;padding:12px"></div>
+    <div class="modal-actions">
+      <a class="btn-primary" href="index.html">Back to Home</a>
+      <a class="btn-secondary" href="bikes.html">View Our Bikes</a>
+      <button class="btn-secondary" id="closeModal">Close</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand"><b>VOLTERRA</b><p>Ride Further. Live Electric.<br>Premium inspected used e-bikes. Serviced in Berlin.</p>
+        <div class="socials" style="margin-top:16px"><a aria-label="Instagram" href="#"><i class="fa-brands fa-instagram"></i></a><a aria-label="YouTube" href="#"><i class="fa-brands fa-youtube"></i></a><a aria-label="Strava" href="#"><i class="fa-brands fa-strava"></i></a></div>
+      </div>
+      <div class="footer-col"><h5>Bikes</h5><a href="bikes.html">Used E-Bikes</a><a href="bikes.html">City & Commute</a><a href="bikes.html">Cargo</a><a href="bikes.html">Trade-In</a></div>
+      <div class="footer-col"><h5>Service</h5><a href="services.html">Services</a><a href="book-service.html">Book Service</a><a href="#">Warranty</a></div>
+      <div class="footer-col"><h5>Company</h5><a href="index.html">Home</a><a href="#">Chausseestraße 45, Berlin</a><a href="#">hello@volterra.bike</a><a href="admin.html" style="margin-top:8px;opacity:0.5">Admin Demo</a></div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 VOLTERRA. All rights reserved.</span><span>Imprint · Privacy · Designed in Berlin</span></div>
+  </div>
+</footer>
+
+<script src="data/bikes.js"></script>
+<script src="js/booking.js"></script>
+</body>
+</html>
