@@ -225,8 +225,8 @@
     return ok;
   }
 
-  function getSelectedImageFile(){
-    return $('#inputImageFile')?.files?.[0] || null;
+  function getSelectedImageFiles(){
+    return Array.from($('#inputImageFile')?.files || []);
   }
 
   function resizeImageFile(file, maxSize=1600, quality=0.82){
@@ -255,28 +255,37 @@
     });
   }
 
-  function setImagePreview(src, fileName='No file selected'){
-    const preview=$('#imagePreview'), img=$('#imagePreviewImg'), name=$('#imageFileName');
-    if(name) name.textContent=fileName;
-    if(img && preview){
-      if(src){ img.src=src; preview.style.display='block'; }
-      else { img.removeAttribute('src'); preview.style.display='none'; }
+  function setImagePreview(sources, fileName='No images selected'){
+    const preview=$('#imagePreview'), name=$('#imageFileName');
+    if(!preview) return;
+    preview.innerHTML='';
+    const list = Array.isArray(sources) ? sources.filter(Boolean) : (sources ? [sources] : []);
+    if(name) name.textContent = list.length ? (fileName || `${list.length} image${list.length===1?'':'s'} selected`) : 'No images selected';
+    if(!list.length){
+      preview.style.display='none';
+      return;
     }
+    list.forEach((src,i)=>{
+      const item=document.createElement('div');
+      item.className='image-preview-item';
+      item.innerHTML=`<img src="${escapeAttr(src)}" alt="Bike image ${i+1}"><span class="preview-num">${i===0?'MAIN':i+1}</span>`;
+      preview.appendChild(item);
+    });
+    preview.style.display='grid';
   }
 
   async function collectForm(idForNewBike=null, existing=null){
-    const imgInput = $('#inputImage')?.value.trim() || '';
-    const selectedFile = getSelectedImageFile();
+    const selectedFiles = getSelectedImageFiles();
     const fallback = idForNewBike ? canonicalImagePath(idForNewBike,1) : FALLBACK_LOCAL;
-    let img = existing?.image || fallback;
+    let images = Array.isArray(existing?.images) && existing.images.length ? [...existing.images] : [existing?.image || fallback];
 
-    if(selectedFile){
-      img = await resizeImageFile(selectedFile);
-    } else if(imgInput.startsWith('assets/') || imgInput.startsWith('data:image/')){
-      img = canonicalizeImage(imgInput, idForNewBike || 1, 1);
-    } else if(imgInput){
-      img = existing?.image || fallback;
+    // If new files were selected, use ALL of them as the bike gallery.
+    // The first selected image is always the main image.
+    if(selectedFiles.length){
+      images = await Promise.all(selectedFiles.map(file=>resizeImageFile(file)));
     }
+
+    const img = images[0] || fallback;
 
     return {
       brand: $('#inputBrand').value.trim(),
@@ -290,7 +299,7 @@
       condition: $('#inputCondition').value,
       status: $('#inputStatus').value,
       image: img,
-      images: existing?.images?.length ? existing.images : [img],
+      images: images,
       description: $('#inputDesc').value.trim(),
     };
   }
@@ -323,7 +332,7 @@
     const st = $('#saveText'); if(st) st.textContent='Save Changes';
     if($('#inputImage')) $('#inputImage').value = (bike.image && !bike.image.startsWith('data:image/') && bike.image!==FALLBACK_LOCAL) ? bike.image : '';
     if($('#inputImageFile')) $('#inputImageFile').value='';
-    setImagePreview(bike.image || '', bike.image?.startsWith('data:image/') ? 'Current uploaded image' : (bike.image || 'Current image'));
+    setImagePreview(bike.images?.length ? bike.images : [bike.image], `${bike.images?.length || 1} current image${(bike.images?.length || 1)===1?'':'s'}`);
     if($('#inputBrand')) $('#inputBrand').value=bike.brand;
     if($('#inputModel')) $('#inputModel').value=bike.model;
     if($('#inputPrice')) $('#inputPrice').value=bike.price;
@@ -421,13 +430,13 @@
     }
   }
 
-  // Image upload / preview
+  // Image upload / multi-image preview
   document.getElementById('inputImageFile')?.addEventListener('change', async e=>{
-    const file=e.target.files?.[0];
-    if(!file){ setImagePreview(''); return; }
+    const files=Array.from(e.target.files || []);
+    if(!files.length){ setImagePreview(''); return; }
     try{
-      const preview=await resizeImageFile(file,900,0.78);
-      setImagePreview(preview, file.name);
+      const previews=await Promise.all(files.map(file=>resizeImageFile(file,900,0.78)));
+      setImagePreview(previews, `${files.length} image${files.length===1?'':'s'} selected`);
     }catch(err){
       e.target.value='';
       setImagePreview('');
