@@ -51,7 +51,7 @@ a{color:inherit;text-decoration:none} img{display:block;max-width:100%} button{b
 .detail-grid{display:grid;grid-template-columns:1.15fr 0.85fr;gap:24px;align-items:start}
 .gallery{background:var(--color-white);border:1px solid var(--color-border);border-radius:var(--radius-xl);overflow:hidden;padding:12px}
 .main-img-wrap{position:relative;aspect-ratio:1.2/1;background:#EEF0EB;border-radius:16px;overflow:hidden;display:grid;place-items:center}
-.main-img-wrap img{width:100%;height:100%;object-fit:cover;transition:opacity .28s}
+.main-img-wrap img{width:100%;height:100%;object-fit:contain;object-position:center;padding:10px;transition:opacity .28s}
 .img-placeholder{color:var(--color-text-secondary);font-size:11px;text-align:center;padding:20px;display:grid;gap:8px;place-items:center}
 .img-placeholder i{font-size:20px}
 .badge{position:absolute;top:12px;left:12px;background:var(--color-dark);color:var(--color-white);font-size:10.5px;letter-spacing:0.08em;font-weight:600;text-transform:uppercase;padding:7px 11px;border-radius:100px;z-index:2}
@@ -60,7 +60,7 @@ a{color:inherit;text-decoration:none} img{display:block;max-width:100%} button{b
 .thumbs{display:flex;gap:10px;margin-top:12px;overflow:auto;padding-bottom:2px;scrollbar-width:none}
 .thumbs::-webkit-scrollbar{display:none}
 .thumb{flex:0 0 86px;height:86px;border-radius:12px;overflow:hidden;border:2px solid transparent;cursor:pointer;transition:.18s;background:#EEEDE8;display:grid;place-items:center;color:var(--color-text-secondary);font-size:10px;text-align:center}
-.thumb img{width:100%;height:100%;object-fit:cover}
+.thumb img{width:100%;height:100%;object-fit:contain;object-position:center;padding:4px}
 .thumb.active{border-color:var(--color-dark)} .thumb:hover{transform:translateY(-1px)}
 .info{background:var(--color-white);border:1px solid var(--color-border);border-radius:var(--radius-xl);padding:24px 22px;position:sticky;top:84px}
 .info-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:6px}
@@ -92,7 +92,7 @@ a{color:inherit;text-decoration:none} img{display:block;max-width:100%} button{b
 .bike-card{background:var(--color-white);border-radius:20px;border:1px solid var(--color-border);overflow:hidden;transition:transform .22s, box-shadow .22s}
 .bike-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-card)}
 .bike-img{position:relative;aspect-ratio:1.2/1;overflow:hidden;background:#EEF0EB;display:grid;place-items:center;color:var(--color-text-secondary);font-size:11px}
-.bike-img img{width:100%;height:100%;object-fit:cover;transition:transform .6s} .bike-card:hover .bike-img img{transform:scale(1.04)}
+.bike-img img{width:100%;height:100%;object-fit:contain;object-position:center;padding:10px;transition:transform .6s} .bike-card:hover .bike-img img{transform:scale(1.02)}
 .badge-card{position:absolute;top:12px;left:12px;background:var(--color-dark);color:var(--color-white);font-size:10.5px;letter-spacing:0.08em;font-weight:600;text-transform:uppercase;padding:6px 10px;border-radius:100px;z-index:2}
 .bike-body{padding:16px 16px 14px}
 .bike-brand{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--color-text-secondary);font-weight:600;margin-bottom:6px}
