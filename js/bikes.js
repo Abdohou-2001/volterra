@@ -9,11 +9,22 @@
   const normalize=b=>({
     ...b,
     id:Number(b.id), price:Number(b.price)||0, year:Number(b.year)||0, mileage:Number(b.mileage)||0,
-    batteryLabel:b.batteryLabel || (typeof b.battery==='number'?`${b.battery} Wh`:String(b.battery||'—')),
-    condition:b.condition||'Good', conditionTag:b.conditionTag||b.condition||'Good',
-    image:(b.image&&String(b.image).startsWith('assets/'))?b.image:`assets/images/bikes/bike-${b.id}.jpg`,
-    images:Array.isArray(b.images)&&b.images.length?b.images:[`assets/images/bikes/bike-${b.id}.jpg`]
-  });
+batteryLabel:b.batteryLabel || (typeof b.battery==='number'?`${b.battery} Wh`:String(b.battery||'—')),
+condition:b.condition||'Good', conditionTag:b.conditionTag||b.condition||'Good',
+
+image:
+  (b.image && String(b.image).startsWith('assets/'))
+    ? b.image
+    : (Array.isArray(b.images) && b.images.length
+        ? b.images[0]
+        : `assets/images/bikes/bike-${String(b.id).padStart(2,'0')}-1.jpg`),
+
+images:
+  (Array.isArray(b.images) && b.images.length)
+    ? b.images
+    : [`assets/images/bikes/bike-${String(b.id).padStart(2,'0')}-1.jpg`]
+
+});
   function load(){try{const x=JSON.parse(localStorage.getItem(STORAGE_KEY));if(Array.isArray(x)&&x.length)return x.map(normalize)}catch(e){} return (window.BIKES||window.bikes||[]).map(normalize)}
   let all=load(), q='', brand='all', condition='all', battery='all', year='all', price='all', sort='featured';
   function fallback(img){if(img.dataset.failed)return;img.dataset.failed='1';const p=document.createElement('div');p.className='img-fallback';p.innerHTML='<i class="fa-solid fa-image"></i><span>Image coming soon</span>';p.style.cssText='position:absolute;inset:0;display:grid;place-items:center;background:#EEEDE8;color:#6B706C;font-size:11px;text-align:center';img.style.display='none';img.parentNode&&img.parentNode.appendChild(p)}
