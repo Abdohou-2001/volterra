@@ -18,7 +18,8 @@
       const fileIndex = m[2] ? Number(m[2]) : 1;
       return canonicalImagePath(fileId, fileIndex);
     }
-    return path.startsWith('assets/') ? path : canonicalImagePath(id,index);
+    if(path.startsWith('assets/') || path.startsWith('data:image/')) return path;
+    return canonicalImagePath(id,index);
   }
   function normalizeBike(b){
     const localImg = canonicalizeImage(b.image, b.id, 1);
