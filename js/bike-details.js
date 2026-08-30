@@ -18,7 +18,8 @@
     if(!path || typeof path!=='string') return canonicalImagePath(bikeId,index);
     const m=path.match(/bike-(\d+)(?:-(\d+))?\.jpg$/i);
     if(m) return canonicalImagePath(m[1], m[2] ? Number(m[2]) : 1);
-    return path.startsWith('assets/') ? path : canonicalImagePath(bikeId,index);
+    if(path.startsWith('assets/') || path.startsWith('data:image/')) return path;
+    return canonicalImagePath(bikeId,index);
   }
   function normalizeBike(b){
     const idNum=Number(b.id);
@@ -73,7 +74,7 @@
         <button class="nav-arrow prev" aria-label="Previous image"><i class="fa-solid fa-chevron-left"></i></button>
         <button class="nav-arrow next" aria-label="Next image"><i class="fa-solid fa-chevron-right"></i></button>
         <div id="mainImgContainer" style="width:100%;height:100%;display:grid;place-items:center">
-          ${imgTag(galleryImages[0], `${bike.brand} ${bike.model} main image`, 'id="mainImg" style="width:100%;height:100%;object-fit:cover"')}
+          ${imgTag(galleryImages[0], `${bike.brand} ${bike.model} main image`, 'id="mainImg" style="width:100%;height:100%;object-fit:contain;object-position:center;padding:10px"')}
         </div>
       </div>
       <div class="thumbs" id="thumbs">
@@ -183,7 +184,7 @@
     // fade effect
     mainImgContainer.style.opacity = '0';
     setTimeout(()=>{
-      mainImgContainer.innerHTML = `<img id="mainImg" src="${galleryImages[current]}" alt="${bike.brand} ${bike.model} main image" style="width:100%;height:100%;object-fit:cover;transition:opacity.28s" loading="lazy" onerror="handleImgError(this)">`;
+      mainImgContainer.innerHTML = `<img id="mainImg" src="${galleryImages[current]}" alt="${bike.brand} ${bike.model} main image" style="width:100%;height:100%;object-fit:contain;object-position:center;padding:10px;transition:opacity.28s" loading="lazy" onerror="handleImgError(this)">`;
       mainImg = document.getElementById('mainImg');
       mainImgContainer.style.opacity = '1';
       [...thumbs.children].forEach((t,i)=> t.classList.toggle('active', i===current));
@@ -206,16 +207,16 @@
 
   // Related bikes — 3, exclude current, prefer same brand
   function related(){
-    const others = (window.BIKES||[]).filter(b=> b.id!==bike.id);
-    const sameBrand = others.filter(b=> b.brand===bike.brand);
-    const pool = [...sameBrand,...others.filter(b=> b.brand!==bike.brand)];
-    const picked = pool.slice(0,3);
-    while(picked.length<3 && others.length>picked.length){
-      const remaining = others.filter(b=>!picked.includes(b));
-      if(remaining[0]) picked.push(remaining[0]);
-      else break;
-    }
-    return picked.slice(0,3);
+    // IMPORTANT: window.BIKES contains the raw inventory objects.
+    // Normalize every related bike before rendering so image, price,
+    // batteryLabel, condition and other derived fields are always present.
+    const all = (window.BIKES||window.bikes||[])
+      .map(normalizeBike)
+      .filter(b => Number(b.id) !== Number(bike.id));
+
+    const sameBrand = all.filter(b => b.brand === bike.brand);
+    const differentBrand = all.filter(b => b.brand !== bike.brand);
+    return [...sameBrand, ...differentBrand].slice(0,3);
   }
 
   const relatedGrid = document.getElementById('relatedGrid');
