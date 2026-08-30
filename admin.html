@@ -63,7 +63,7 @@ table{width:100%;border-collapse:collapse;min-width:900px}
 thead th{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--color-text-secondary);font-weight:700;text-align:left;padding:12px;border-bottom:1px solid var(--color-border);background:#FAFAF8;white-space:nowrap}
 tbody td{padding:12px;border-bottom:1px solid var(--color-border);font-size:13px;vertical-align:middle}
 .bike-cell{display:flex;align-items:center;gap:10px}
-.bike-cell img{width:48px;height:48px;border-radius:10px;object-fit:cover;background:#EEEDE8;border:1px solid var(--color-border)}
+.bike-cell img{width:48px;height:48px;border-radius:10px;object-fit:contain;background:#EEEDE8;border:1px solid var(--color-border)}
 .bike-cell .ph{width:48px;height:48px;border-radius:10px;background:#EEEDE8;display:grid;place-items:center;font-size:10px;color:var(--color-text-secondary);border:1px solid var(--color-border)}
 .badge{font-size:10px;font-weight:600;letter-spacing:0.06em;padding:4px 8px;border-radius:100px;display:inline-block;border:1px solid var(--color-border)}
 .badge.available{background:#EAF5D0;border-color:#D6E8A8} .badge.sold{background:#EEEDE8}
@@ -73,7 +73,7 @@ tbody td{padding:12px;border-bottom:1px solid var(--color-border);font-size:13px
 .icon-btn:hover{border-color:var(--color-dark);transform:translateY(-1px)}
 .cards{display:none;grid-template-columns:1fr;gap:12px}
 .bike-card{background:var(--color-white);border:1px solid var(--color-border);border-radius:18px;overflow:hidden;display:flex;gap:12px;padding:12px}
-.bike-card img{width:84px;height:84px;border-radius:12px;object-fit:cover;background:#EEEDE8;flex:0 0 84px}
+.bike-card img{width:84px;height:84px;border-radius:12px;object-fit:contain;background:#EEEDE8;flex:0 0 84px}
 .bike-card .ph{width:84px;height:84px;border-radius:12px;background:#EEEDE8;display:grid;place-items:center;color:var(--color-text-secondary);font-size:10px;flex:0 0 84px;border:1px solid var(--color-border)}
 .empty{background:var(--color-white);border:1px dashed var(--color-border);border-radius:20px;padding:48px 20px;text-align:center}
 .backdrop{position:fixed;inset:0;background:rgba(17,19,18,0.42);backdrop-filter:blur(6px);z-index:70;display:none;place-items:center;padding:18px}
@@ -139,7 +139,7 @@ tbody td{padding:12px;border-bottom:1px solid var(--color-border);font-size:13px
     </div>
     <div class="side-foot">
       <b>VOLTERRA Demo Admin</b>
-      <span>Frontend only · localStorage: ebike_bikes & ebike_bookings<br>No Base64, no external images</span>
+      <span>Frontend only · localStorage: ebike_bikes & ebike_bookings<br>Images can be uploaded from your device or use local asset paths</span>
     </div>
   </aside>
 
@@ -192,7 +192,19 @@ tbody td{padding:12px;border-bottom:1px solid var(--color-border);font-size:13px
     <div class="modal-head"><h3 id="modalTitle">Add Bike</h3><button class="icon-btn" id="closeModal"><i class="fa-solid fa-xmark"></i></button></div>
     <div class="modal-body">
       <div class="form-grid">
-        <div class="field full"><label>Image URL — local placeholder only</label><input id="inputImage" type="text" placeholder="assets/images/bikes/bike-01-1.jpg"><small class="err">Use assets/images/bikes/...</small></div>
+        <div class="field full">
+          <label>Bike Image</label>
+          <input id="inputImage" type="text" placeholder="assets/images/bikes/bike-01-1.jpg" autocomplete="off">
+          <small class="err">Use a local asset path, or choose an image file below.</small>
+          <div style="display:flex;align-items:center;gap:10px;margin-top:8px;flex-wrap:wrap">
+            <label for="inputImageFile" class="btn-secondary" style="padding:9px 13px;font-size:12px;cursor:pointer"><i class="fa-solid fa-upload"></i> Choose Image</label>
+            <input id="inputImageFile" type="file" accept="image/jpeg,image/png,image/webp,image/avif" style="display:none">
+            <span id="imageFileName" style="font-size:11px;color:var(--color-text-secondary)">No file selected</span>
+          </div>
+          <div id="imagePreview" style="display:none;margin-top:10px;border:1px solid var(--color-border);border-radius:12px;background:var(--color-surface-alt);padding:8px;max-width:220px">
+            <img id="imagePreviewImg" alt="Selected bike preview" style="display:block;width:100%;height:130px;object-fit:contain;border-radius:8px">
+          </div>
+        </div>
         <div class="field" id="f-brand"><label>Brand *</label><input id="inputBrand" placeholder="Trek"><small class="err">Brand required</small></div>
         <div class="field" id="f-model"><label>Model *</label><input id="inputModel" placeholder="Powerfly 4"><small class="err">Model required</small></div>
         <div class="field" id="f-price"><label>Price * ($)</label><input id="inputPrice" type="number" min="0" placeholder="2100"><small class="err">Valid price required</small></div>
