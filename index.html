@@ -199,6 +199,14 @@ button{border:0;background:none;font:inherit;cursor:pointer}
 .bike-card:hover .bike-link i{transform:translateX(3px)}
 
 /* Why */
+/* Intro video */
+.intro-video-section{padding:12px 0 24px}
+.intro-video-card{background:var(--color-dark);border-radius:var(--radius-xl);overflow:hidden;border:1px solid var(--color-border);padding:24px}
+.intro-video-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:16px}
+.intro-video-head h2{color:var(--color-white);font-size:clamp(26px,3vw,40px)}
+.intro-video-head p{color:#AEB5B0;font-size:13px;max-width:430px;line-height:1.5}
+.intro-video{width:100%;display:block;aspect-ratio:16/9;object-fit:cover;border-radius:18px;background:#080908}
+
 .why{background:var(--color-dark);color:var(--color-white);border-radius:var(--radius-xl);overflow:hidden}
 .why-grid{display:grid;grid-template-columns:0.9fr 1.1fr}
 .why-left{padding:52px 44px;border-right:1px solid var(--color-border-dark);display:flex;flex-direction:column}
@@ -305,6 +313,12 @@ footer{padding:56px 0 28px;border-top:1px solid var(--color-border)}
 <style>
 .image-placeholder{height:100%;min-height:260px;display:grid;place-items:center;align-content:center;gap:10px;border:1px dashed var(--color-border);border-radius:18px;background:var(--color-bg);color:var(--color-text-secondary);text-align:center;font-size:12px}
 .image-placeholder i{font-size:26px;color:var(--color-primary)}
+@media(max-width:760px){
+  .intro-video-card{padding:14px;border-radius:20px}
+  .intro-video-head{display:block}
+  .intro-video-head h2{margin-bottom:8px}
+  .intro-video{border-radius:14px}
+}
 </style>
 </head>
 <body>
@@ -375,6 +389,25 @@ footer{padding:56px 0 28px;border-top:1px solid var(--color-border)}
             <div><b>VOLTERRA Urban 20</b><span>Inspected • 710Wh • 790 km</span></div>
           </div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Intro video: add your video file at assets/videos/volterra-intro.mp4 -->
+  <section class="intro-video-section">
+    <div class="container">
+      <div class="intro-video-card">
+        <div class="intro-video-head">
+          <div>
+            <p class="eyebrow" style="color:var(--color-primary);margin-bottom:8px">Meet VOLTERRA</p>
+            <h2>Ride Further.<br>Live Electric.</h2>
+          </div>
+          <p>Discover how we inspect, service and prepare every used e-bike before it reaches the road.</p>
+        </div>
+        <video class="intro-video" controls playsinline preload="metadata" poster="assets/images/services/hero-service.jpg">
+          <source src="assets/videos/volterra-intro.mp4" type="video/mp4">
+          Your browser does not support the video element.
+        </video>
       </div>
     </div>
   </section>
@@ -453,9 +486,8 @@ footer{padding:56px 0 28px;border-top:1px solid var(--color-border)}
             <p class="eyebrow" style="color:var(--color-primary);margin-bottom:18px">Why VOLTERRA</p>
             <h2>Not Just Used.<br>Ready to Ride.</h2>
             <p>Every bike is bought selectively, stripped, checked and serviced before it gets a VOLTERRA badge. You see the real report.</p>
-            <div class="why-visual" aria-label="Workshop inspection image">
-              <img src="assets/images/services/workshop.jpg" alt="VOLTERRA workshop inspection" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'">
-              <div class="image-placeholder" style="display:none"><i class="fa-solid fa-screwdriver-wrench"></i><span>Add: assets/images/services/workshop.jpg</span></div>
+            <div class="why-visual" aria-label="VOLTERRA workshop inspection">
+              <img src="assets/images/services/hero-service.jpg" alt="VOLTERRA e-bike workshop inspection" loading="lazy">
             </div>
           </div>
           <div class="why-right">
