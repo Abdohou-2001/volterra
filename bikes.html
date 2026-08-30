@@ -69,7 +69,7 @@ button{border:0;background:none;font:inherit;cursor:pointer}
 .page-hero h1{font-size:clamp(30px,3.2vw,44px);font-weight:800;line-height:0.95}
 .page-hero p{color:var(--color-text-secondary);font-size:15px;line-height:1.5;max-width:420px;margin-top:8px}
 .page-hero-visual{display:flex;align-items:center;gap:14px}
-.page-hero-visual .mini{width:84px;height:84px;border-radius:14px;object-fit:cover;border:1px solid var(--color-border)}
+.page-hero-visual .mini{width:84px;height:84px;border-radius:14px;object-fit:contain;border:1px solid var(--color-border)}
 .page-hero-visual .spec{background:var(--color-bg);border:1px solid var(--color-border);border-radius:14px;padding:10px 12px}
 .page-hero-visual b{font-family:Manrope,sans-serif;font-size:13px;display:block}
 .page-hero-visual span{font-size:11px;color:var(--color-text-secondary)}
@@ -97,7 +97,7 @@ button{border:0;background:none;font:inherit;cursor:pointer}
 .bike-card{background:var(--color-white);border-radius:20px;border:1px solid var(--color-border);overflow:hidden;transition:transform .22s, box-shadow .22s}
 .bike-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-card)}
 .bike-img{position:relative;aspect-ratio:1.2/1;overflow:hidden;background:#EEF0EB}
-.bike-img img{width:100%;height:100%;object-fit:cover;transition:transform .6s}
+.bike-img img{width:100%;height:100%;object-fit:contain;object-position:center;padding:10px;transition:transform .6s}
 .bike-card:hover .bike-img img{transform:scale(1.04)}
 .badge{position:absolute;top:12px;left:12px;background:var(--color-dark);color:var(--color-white);font-size:10.5px;letter-spacing:0.08em;font-weight:600;text-transform:uppercase;padding:6px 10px;border-radius:100px}
 .badge.great{background:#2A332E;color:#DDE7D3}
