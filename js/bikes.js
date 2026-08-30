@@ -13,7 +13,7 @@ batteryLabel:b.batteryLabel || (typeof b.battery==='number'?`${b.battery} Wh`:St
 condition:b.condition||'Good', conditionTag:b.conditionTag||b.condition||'Good',
 
 image:
-  (b.image && String(b.image).startsWith('assets/'))
+  (b.image && (String(b.image).startsWith('assets/') || String(b.image).startsWith('data:image/')))
     ? b.image
     : (Array.isArray(b.images) && b.images.length
         ? b.images[0]
