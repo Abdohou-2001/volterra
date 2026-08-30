@@ -1,0 +1,341 @@
+/* ==========================================================================
+   VOLTERRA — Premium Used E-Bike & Service
+   Global Stylesheet — css/style.css
+   1. Variables 2. Reset 3. Base 4. Typography 5. Layout 6. Header/Nav
+   7. Buttons 8. Forms 9. Cards 10. Badges 11. Home 12. Inventory
+   13. Bike Details 14. Services 15. Booking 16. Admin 17. Modals
+   18. Footer 19. Utilities 20. Responsive 21. Accessibility
+   ========================================================================== */
+
+/* 1. VARIABLES */
+:root{
+  --color-primary:#B7F34A; --color-primary-dark:#8FC534; --color-primary-light:#D4F88A; --color-primary-soft:#EEF8D6;
+  --color-accent:#111312;
+  --color-background:#F5F5F2; --color-surface:#FFFFFF; --color-surface-alt:#EEF0EB; --color-surface-muted:#F8F8F6;
+  --color-text:#111312; --color-text-strong:#0A0D0A; --color-text-muted:#6B706C; --color-text-faint:#9BA49C;
+  --color-border:rgba(17,19,18,0.08); --color-border-strong:rgba(17,19,18,0.14);
+  --color-border-dark:rgba(255,255,255,0.12); --color-border-dark-strong:rgba(255,255,255,0.18);
+  --color-success:#1A7A4C; --color-success-bg:#E6F4EB;
+  --color-warning:#B87A00; --color-warning-bg:#FFF3D6;
+  --color-danger:#C0392B; --color-danger-bg:#FDECEA;
+  --radius-xs:8px; --radius-sm:12px; --radius-md:16px; --radius-lg:18px; --radius-xl:28px; --radius-pill:100px;
+  --shadow-xs:0 1px 2px rgba(17,19,18,0.04); --shadow-sm:0 2px 12px rgba(17,19,18,0.05);
+  --shadow-card:0 8px 40px rgba(17,19,18,0.06); --shadow-card-hover:0 16px 48px rgba(17,19,18,0.10);
+  --max-w:1280px; --max-w-narrow:960px; --pad-x:24px; --header-h:68px;
+  --font-sans:Inter,ui-sans-system,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --font-display:Manrope,Inter,ui-sans-system,sans-serif;
+  --ease:cubic-bezier(.2,.8,.2,1); --dur-fast:150ms; --dur:220ms;
+}
+
+/* 2. RESET */
+*,*::before,*::after{box-sizing:border-box} *{margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;color-scheme:light}
+body{min-height:100vh;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img,picture,video,canvas,svg{display:block;max-width:100%}
+img{height:auto;object-fit:cover;background:#EEF0EB}
+input,button,textarea,select{font:inherit;color:inherit}
+button{border:0;background:none;cursor:pointer}
+a{color:inherit;text-decoration:none} ul,ol{list-style:none} table{border-collapse:collapse;width:100%}
+/* placeholders you will fill later */
+.img-placeholder,.ph,.img-fallback{
+  display:grid;place-items:center;gap:8px;background:var(--color-surface-alt);
+  color:var(--color-text-muted);font-size:11px;line-height:1.3;text-align:center;
+  border:1px dashed var(--color-border);border-radius:var(--radius-md);min-height:120px;
+}
+.img-placeholder i{font-size:18px}
+
+/* 3. BASE */
+body{font-family:var(--font-sans);background:var(--color-background);color:var(--color-text);font-size:15px;line-height:1.6}
+::selection{background:var(--color-primary);color:var(--color-text)}
+:focus-visible{outline:2px solid var(--color-text);outline-offset:2px;border-radius:2px}
+a{transition:color var(--dur-fast) var(--ease),opacity var(--dur-fast) var(--ease)}
+input,select,textarea{background:var(--color-surface);border:1px solid var(--color-border)}
+input:focus,select:focus,textarea:focus{border-color:var(--color-text);outline:none}
+
+/* 4. TYPOGRAPHY */
+h1,h2,h3,h4{font-family:var(--font-display);font-weight:800;letter-spacing:-0.03em;line-height:0.95;color:var(--color-text-strong)}
+h1{font-size:clamp(36px,5vw,64px)} h2{font-size:clamp(28px,3.4vw,46px)} h3{font-size:clamp(20px,2.2vw,26px);line-height:1.1}
+h4{font-size:17px;line-height:1.2;font-weight:700}
+.eyebrow{font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--color-text-muted)}
+.price,.bike-price{font-family:var(--font-display);font-weight:800;letter-spacing:-0.02em}
+label{font-size:12.5px;font-weight:600}
+
+/* 5. LAYOUT */
+.container{width:100%;max-width:var(--max-w);margin-inline:auto;padding-inline:var(--pad-x)}
+.section{padding:88px 0} .section + .section{padding-top:0}
+.section-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;margin-bottom:36px}
+.section-head h2{max-width:560px;line-height:0.92} .section-head p{max-width:380px;color:var(--color-text-muted);font-size:15px;line-height:1.5}
+.page-hero{padding:24px 0 18px}
+.page-hero-inner{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-xl);padding:28px;display:flex;justify-content:space-between;align-items:center;gap:20px}
+.page-hero h1{font-size:clamp(30px,3.2vw,44px)} .page-hero p{color:var(--color-text-muted);font-size:15px;margin-top:8px;max-width:420px}
+.breadcrumb{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:18px 0 14px;font-size:13px;color:var(--color-text-muted)}
+.breadcrumb a:hover{color:var(--color-text);text-decoration:underline;text-underline-offset:4px}
+.breadcrumb i{font-size:10px}
+
+/* 6. HEADER */
+.announce{background:var(--color-accent);color:#C8CFC9;font-size:12.5px;text-align:center;padding:10px 16px;display:flex;justify-content:center;align-items:center;gap:10px}
+.announce strong{color:var(--color-surface);font-weight:600} .announce .dot{width:4px;height:4px;border-radius:50%;background:var(--color-primary);display:inline-block}
+.nav-wrap,.admin-header{position:sticky;top:0;z-index:50;background:rgba(245,245,242,0.88);backdrop-filter:saturate(180%) blur(16px);border-bottom:1px solid var(--color-border)}
+.nav,.admin-nav{height:var(--header-h);display:flex;align-items:center;justify-content:space-between}
+.logo{font-family:var(--font-display);font-weight:800;font-size:20px;letter-spacing:-0.04em;display:flex;align-items:center;gap:8px}
+.logo-mark{width:28px;height:28px;background:var(--color-accent);color:var(--color-primary);display:grid;place-items:center;border-radius:8px;font-size:12px;font-weight:800}
+.nav-links{display:flex;align-items:center;gap:28px}
+.nav-links a{font-size:14px;font-weight:500;opacity:0.85;transition:opacity var(--dur-fast) var(--ease)}
+.nav-links a:hover{opacity:1} .nav-links a.active{opacity:1;font-weight:600;position:relative}
+.nav-links a.active::after{content:'';position:absolute;left:0;right:0;bottom:-5px;height:2px;background:var(--color-text);border-radius:2px}
+.nav-actions{display:flex;align-items:center;gap:12px}
+.nav-hamburger{display:none;width:40px;height:40px;border-radius:50%;border:1px solid var(--color-border);background:var(--color-surface);place-items:center}
+.mobile-drawer{position:fixed;inset:0;z-index:60;background:var(--color-background);transform:translateX(100%);transition:transform .36s var(--ease);display:flex;flex-direction:column}
+.mobile-drawer.open{transform:translateX(0)}
+.mobile-drawer-head{height:var(--header-h);display:flex;align-items:center;justify-content:space-between;padding:0 24px;border-bottom:1px solid var(--color-border)}
+.mobile-links{padding:32px 24px;display:flex;flex-direction:column;gap:6px}
+.mobile-links a{font-family:var(--font-display);font-size:34px;font-weight:700;letter-spacing:-0.03em;line-height:1.1;padding:10px 0;border-bottom:1px solid var(--color-border)}
+.mobile-foot{margin-top:auto;padding:24px;border-top:1px solid var(--color-border);display:flex;flex-direction:column;gap:14px}
+.admin-title{display:flex;align-items:center;gap:10px}
+.admin-title span{font-size:11px;color:var(--color-text-muted);border:1px solid var(--color-border);padding:4px 8px;border-radius:100px;background:var(--color-surface)}
+
+/* 7. BUTTONS */
+.btn-primary,.btn-secondary,.btn-dark,.btn-danger{
+  display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  padding:13px 22px;border-radius:var(--radius-pill);font-weight:600;font-size:14px;letter-spacing:-0.01em;line-height:1;
+  transition:transform var(--dur-fast) var(--ease),box-shadow var(--dur-fast) var(--ease),background var(--dur-fast) var(--ease),border-color var(--dur-fast) var(--ease);
+  white-space:nowrap;user-select:none;
+}
+.btn-primary{background:var(--color-primary);color:var(--color-text)}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(183,243,74,0.35);background:var(--color-primary-dark)}
+.btn-secondary{background:var(--color-surface);border:1px solid var(--color-border);color:var(--color-text)}
+.btn-secondary:hover{border-color:var(--color-text);transform:translateY(-1px)}
+.btn-dark{background:var(--color-accent);color:var(--color-surface)} .btn-dark:hover{background:#1D201E;transform:translateY(-1px)}
+.btn-danger{background:var(--color-text);color:var(--color-surface)} .btn-danger:hover{background:#2A2E2B}
+.btn-primary:disabled{opacity:0.5;pointer-events:none}
+.icon-btn{width:36px;height:36px;border-radius:50%;border:1px solid var(--color-border);background:var(--color-surface);display:grid;place-items:center;transition:transform var(--dur-fast) var(--ease),border-color var(--dur-fast) var(--ease)}
+.icon-btn:hover{border-color:var(--color-text);transform:translateY(-1px)}
+
+/* 8. FORMS */
+.form-card,.contact-card,.summary-card,.help-card,.trust-card{background:var(--color-surface);border:1px solid var(--color-border);border-radius:20px;padding:22px}
+.form-group{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:22px}
+.form-group.full{grid-template-columns:1fr}
+.field{display:flex;flex-direction:column;gap:6px}
+.field input,.field select,.field textarea,.search input,.search-wrap input{
+  padding:12px 14px;border-radius:12px;border:1px solid var(--color-border);background:var(--color-background);font-size:14px;outline:none;
+  transition:border-color var(--dur-fast) var(--ease),background var(--dur-fast) var(--ease),box-shadow var(--dur-fast) var(--ease);
+}
+.field input:focus,.field select:focus,.field textarea:focus,.search input:focus{border-color:var(--color-text);background:var(--color-surface);box-shadow:0 0 0 4px rgba(17,19,18,0.06)}
+.field textarea{resize:vertical;min-height:96px}
+.field small.error,.field small.err{font-size:11px;color:var(--color-danger);display:none}
+.field.invalid input,.field.invalid select,.field.invalid textarea{border-color:var(--color-danger);background:var(--color-danger-bg)}
+.field.invalid small.error,.field.invalid small.err{display:block}
+::placeholder{color:var(--color-text-faint)}
+.section-label{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--color-text-muted);font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.section-label .num{width:22px;height:22px;border-radius:50%;background:var(--color-accent);color:var(--color-surface);display:grid;place-items:center;font-size:10px;font-weight:800}
+.toolbar,.filters{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+.toolbar{margin:8px 0 18px}
+.search,.search-wrap{position:relative;flex:1 1 260px;max-width:380px}
+.search i,.search-wrap i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--color-text-muted);font-size:12px}
+.search input,.search-wrap input{width:100%;padding-left:38px;border-radius:100px;background:var(--color-surface)}
+.filters{flex-wrap:wrap} .filter{position:relative}
+.filter select,.filters select{appearance:none;padding:10px 32px 10px 14px;border-radius:100px;border:1px solid var(--color-border);background:var(--color-surface);font-size:13px;font-weight:500;cursor:pointer;min-width:118px}
+
+/* 9. CARDS */
+.card-white,.stat-card,.bike-card,.service-card,.price-card,.booking-card{background:var(--color-surface);border:1px solid var(--color-border);border-radius:20px;transition:transform var(--dur) var(--ease),box-shadow var(--dur) var(--ease)}
+.card-white{padding:22px} .stat-card{padding:16px;border-radius:18px}
+.stat-card .k{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--color-text-muted);font-weight:700;margin-bottom:6px}
+.stat-card .v{font-family:var(--font-display);font-size:26px;font-weight:800;line-height:1}
+.stat-card .sub{font-size:11px;color:var(--color-text-muted);margin-top:6px}
+.bikes-grid,.services-grid,.pricing,.process{display:grid;gap:18px}
+.bikes-grid{grid-template-columns:repeat(3,1fr)}
+.bike-card{overflow:hidden;display:flex;flex-direction:column}
+.bike-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-card)}
+.bike-img{position:relative;aspect-ratio:1.2/1;overflow:hidden;background:var(--color-surface-alt);display:grid;place-items:center}
+.bike-img img{width:100%;height:100%;object-fit:cover;transition:transform .6s var(--ease)}
+.bike-card:hover .bike-img img{transform:scale(1.04)}
+.bike-body{padding:16px 16px 14px;display:flex;flex-direction:column;flex:1}
+.bike-brand{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--color-text-muted);font-weight:600;margin-bottom:6px}
+.bike-name{font-family:var(--font-display);font-weight:700;font-size:17px;letter-spacing:-0.02em;margin-bottom:8px;line-height:1.2}
+.bike-specs{font-size:12.5px;color:var(--color-text-muted);display:flex;gap:8px;align-items:center;margin-bottom:14px;flex-wrap:wrap}
+.bike-specs .dot{width:3px;height:3px;background:var(--color-text-muted);border-radius:50%;display:inline-block}
+.bike-foot{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--color-border);padding-top:12px;margin-top:auto}
+.bike-price{font-size:18px} .bike-link{font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:6px}
+.bike-link:hover{gap:8px}
+.services-grid{grid-template-columns:repeat(3,1fr)}
+.service-card{padding:22px 22px 18px} .service-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-card)}
+.service-icon{width:40px;height:40px;border-radius:12px;background:var(--color-background);border:1px solid var(--color-border);display:grid;place-items:center;margin-bottom:16px;font-size:15px}
+.service-card h4{font-size:17px;margin-bottom:8px} .service-card p{font-size:13.5px;color:var(--color-text-muted);line-height:1.5;margin-bottom:14px}
+.service-link{font-size:13px;font-weight:600;display:inline-flex;gap:6px;align-items:center}
+
+/* 10. BADGES */
+.badge,.badge-card,.save,.save-badge{font-size:10.5px;font-weight:600;letter-spacing:0.06em;padding:5px 9px;border-radius:100px;display:inline-flex;align-items:center;border:1px solid var(--color-border);background:var(--color-surface)}
+.badge-card{position:absolute;top:12px;left:12px;background:var(--color-accent);color:var(--color-surface);border-color:var(--color-accent);z-index:2;text-transform:uppercase;letter-spacing:0.08em}
+.badge.available{background:var(--color-primary-soft);border-color:#D6E8A8;color:#2A332E}
+.badge.sold{background:var(--color-surface-alt)} .badge.excellent{background:var(--color-accent);color:var(--color-surface)}
+.badge.great{background:#2A332E;color:#DDE7D3;border-color:#2A332E} .save{background:var(--color-primary);border-color:var(--color-primary)}
+
+/* 11. HOME */
+.hero{padding:24px 0}
+.hero-grid{background:var(--color-surface);border-radius:var(--radius-xl);overflow:hidden;display:grid;grid-template-columns:1.05fr 0.95fr;min-height:640px;border:1px solid var(--color-border)}
+.hero-copy{padding:54px 48px;display:flex;flex-direction:column;justify-content:center}
+.hero-kicker{display:flex;align-items:center;gap:10px;margin-bottom:22px} .hero-kicker .line{width:28px;height:1px;background:var(--color-text)}
+.hero-sub{font-size:17px;line-height:1.55;color:var(--color-text-muted);max-width:420px;margin-bottom:28px}
+.hero-ctas{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:28px}
+.hero-meta,.hero-badges{display:flex;gap:22px;border-top:1px solid var(--color-border);padding-top:18px;margin-top:6px;flex-wrap:wrap}
+.hero-meta b{font-family:var(--font-display);font-size:18px;display:block;margin-bottom:2px} .hero-meta span{color:var(--color-text-muted);font-size:12px}
+.hero-visual{position:relative;background:var(--color-surface-alt);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.hero-visual img{width:100%;height:100%;object-fit:cover}
+.hero-overlay{position:absolute;bottom:20px;left:20px;right:20px;background:rgba(255,255,255,0.92);backdrop-filter:blur(10px);border:1px solid rgba(17,19,18,0.08);border-radius:14px;padding:14px;display:flex;justify-content:space-between;gap:12px;z-index:2}
+.why{background:var(--color-accent);color:var(--color-surface);border-radius:var(--radius-xl);overflow:hidden;display:grid;grid-template-columns:0.9fr 1.1fr}
+.why-left{padding:52px 44px;border-right:1px solid var(--color-border-dark)} .why-left h2{color:var(--color-surface);font-size:clamp(28px,3vw,40px);margin-bottom:14px}
+.why-left p{color:var(--color-text-faint);line-height:1.6;font-size:15px;max-width:320px}
+.why-visual{border-radius:14px;overflow:hidden;margin-top:22px;background:#1D201E;aspect-ratio:1.3/1;position:relative}
+.why-visual img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.why-right{display:grid;grid-template-columns:1fr 1fr}
+.why-item{padding:32px 28px;border-right:1px solid var(--color-border-dark);border-bottom:1px solid var(--color-border-dark)}
+.why-item:nth-child(2n){border-right:0} .why-item:nth-last-child(-n+2){border-bottom:0}
+.why-num{font-size:11px;letter-spacing:0.12em;color:var(--color-primary);font-weight:700;margin-bottom:12px}
+.why-item h3,.why-item h4{color:var(--color-surface);font-size:17px;margin-bottom:8px} .why-item p{color:var(--color-text-faint);font-size:13px;line-height:1.6}
+.how{display:grid;grid-template-columns:1.2fr 0.8fr;gap:18px;align-items:start} .how-steps{display:grid;gap:12px}
+.step{background:var(--color-surface);border:1px solid var(--color-border);border-radius:20px;padding:22px;display:flex;gap:16px;align-items:flex-start;position:relative}
+.step .arrow{position:absolute;top:28px;right:-10px;width:20px;height:20px;background:var(--color-background);border:1px solid var(--color-border);border-radius:50%;display:grid;place-items:center;z-index:2;font-size:10px}
+.step h4{font-size:16px;margin-bottom:6px} .step p{font-size:13px;color:var(--color-text-muted);line-height:1.5}
+.how-side{background:var(--color-accent);color:var(--color-surface);border-radius:20px;padding:28px}
+.how-side h3{color:var(--color-surface);margin:10px 0 8px} .how-side p{color:var(--color-text-faint);font-size:13px;line-height:1.5}
+.how-side .stat{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px;padding-top:18px;border-top:1px solid var(--color-border-dark)}
+.how-side .stat b{display:block;font-family:var(--font-display);font-size:20px} .how-side .stat span{font-size:11px;color:var(--color-text-faint)}
+.services{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.final{background:var(--color-accent);color:var(--color-surface);border-radius:var(--radius-xl);padding:56px 48px;display:grid;grid-template-columns:1.2fr 0.8fr;gap:24px;align-items:center;position:relative;overflow:hidden}
+.final::after{content:'';position:absolute;right:-10%;top:-30%;width:60%;height:140%;background:radial-gradient(50% 50% at 50% 50%, rgba(183,243,74,0.22) 0%, rgba(183,243,74,0) 70%);pointer-events:none}
+.final h2{color:var(--color-surface);font-size:clamp(32px,4vw,52px);line-height:0.92;margin-bottom:14px;position:relative;z-index:1}
+.final p{color:var(--color-text-faint);max-width:380px;line-height:1.5;position:relative;z-index:1}
+.final-actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:flex-end;position:relative;z-index:1}
+
+/* 12. BIKE DETAILS */
+.detail-grid{display:grid;grid-template-columns:1.15fr 0.85fr;gap:24px;align-items:start}
+.gallery{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-xl);overflow:hidden;padding:12px}
+.main-img-wrap{position:relative;aspect-ratio:1.2/1;background:var(--color-surface-alt);border-radius:16px;overflow:hidden;display:grid;place-items:center}
+.main-img-wrap img{width:100%;height:100%;object-fit:cover}
+.nav-arrow{position:absolute;top:50%;transform:translateY(-50%);width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.9);border:1px solid var(--color-border);display:grid;place-items:center;z-index:2}
+.nav-arrow.prev{left:12px} .nav-arrow.next{right:12px}
+.thumbs{display:flex;gap:10px;margin-top:12px;overflow:auto;padding-bottom:2px;scrollbar-width:none} .thumbs::-webkit-scrollbar{display:none}
+.thumb{flex:0 0 86px;height:86px;border-radius:12px;overflow:hidden;border:2px solid transparent;cursor:pointer;background:var(--color-surface-alt);display:grid;place-items:center;position:relative}
+.thumb.active{border-color:var(--color-accent)} .thumb img{width:100%;height:100%;object-fit:cover}
+.info{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-xl);padding:24px 22px;position:sticky;top:84px}
+.info-brand{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--color-text-muted);font-weight:600;margin-bottom:6px}
+.info-title{font-size:clamp(26px,2.8vw,36px);line-height:0.95;font-weight:800;margin-bottom:10px}
+.price-row{display:flex;align-items:baseline;gap:12px;margin:10px 0 14px;flex-wrap:wrap} .price{font-size:30px}
+.old-price{font-size:14px;color:var(--color-text-muted);text-decoration:line-through}
+.condition-line{display:inline-flex;align-items:center;gap:6px;font-size:12px;background:var(--color-surface-alt);border:1px solid var(--color-border);padding:6px 10px;border-radius:100px;margin-bottom:16px}
+.specs-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0;padding:16px;background:var(--color-background);border:1px solid var(--color-border);border-radius:14px}
+.spec-k{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--color-text-muted);font-weight:600;margin-bottom:3px} .spec-v{font-size:14px;font-weight:600}
+.ctas{display:flex;flex-direction:column;gap:10px;margin:18px 0 14px} .ctas .btn-primary,.ctas .btn-secondary{width:100%}
+.trust{display:flex;gap:16px;border-top:1px solid var(--color-border);padding-top:14px;margin-top:10px;flex-wrap:wrap}
+.trust div{font-size:11px;color:var(--color-text-muted);display:flex;align-items:center;gap:6px}
+.detail-sections{margin-top:24px;display:grid;grid-template-columns:1.15fr 0.85fr;gap:24px}
+.checklist{list-style:none;display:grid;gap:8px;margin-top:12px}
+.checklist li{font-size:13px;display:flex;gap:10px;align-items:center}
+.checklist li i{width:20px;height:20px;background:var(--color-accent);color:var(--color-primary);border-radius:50%;display:grid;place-items:center;font-size:10px;flex:0 0 20px}
+.related{margin-top:42px} .related h2{font-size:clamp(24px,2.4vw,32px);margin-bottom:18px}
+
+/* 13. SERVICES */
+.pricing{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.price-card{padding:22px;display:flex;flex-direction:column}
+.price-card.featured{background:var(--color-accent);color:var(--color-surface);border-color:var(--color-accent)}
+.price-card h4{font-size:15px;margin-bottom:6px} .price-card span.desc{font-size:12px;color:var(--color-text-muted);margin-bottom:16px;display:block}
+.price-card.featured span.desc{color:var(--color-text-faint)}
+.price-card .cost{font-family:var(--font-display);font-size:28px;font-weight:800;margin-bottom:4px}
+.price-card ul{margin:14px 0 18px;display:grid;gap:6px} .price-card li{font-size:12.5px;display:flex;gap:8px;color:var(--color-text-muted)}
+.price-card.featured li{color:#C8CFC9}
+.contact-grid{display:grid;grid-template-columns:1.1fr 0.9fr;gap:18px}
+.contact-item{display:flex;gap:12px} .contact-item i{width:36px;height:36px;border-radius:10px;background:var(--color-background);border:1px solid var(--color-border);display:grid;place-items:center;font-size:13px;flex:0 0 36px}
+.map-box{border-radius:14px;overflow:hidden;margin-top:8px;border:1px solid var(--color-border-dark);background:#1D201E;aspect-ratio:1.2/1;display:grid;place-items:center;color:var(--color-text-faint);font-size:11px;position:relative}
+.map-box img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+
+/* 14. BOOKING */
+.intro{padding:22px 0 16px} .intro-inner{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-xl);padding:28px;display:flex;justify-content:space-between;gap:20px;align-items:center}
+.intro-inner h1{font-size:clamp(28px,3vw,40px);line-height:0.95;margin-bottom:8px} .intro-inner p{color:var(--color-text-muted);font-size:15px;line-height:1.5;max-width:460px}
+.booking-layout{display:grid;grid-template-columns:1.15fr 0.85fr;gap:24px;align-items:start;margin-top:18px}
+.sticky-col{position:sticky;top:86px;display:flex;flex-direction:column;gap:18px}
+.service-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:22px}
+.service-opt{position:relative;border:1px solid var(--color-border);background:var(--color-background);border-radius:14px;padding:14px 12px;cursor:pointer;transition:all var(--dur-fast) var(--ease);text-align:left}
+.service-opt:hover{border-color:var(--color-text);transform:translateY(-1px)} .service-opt.selected{border-color:var(--color-text);background:var(--color-accent);color:var(--color-surface)}
+.service-opt input{position:absolute;opacity:0;pointer-events:none}
+.svc-icon{width:28px;height:28px;border-radius:8px;background:var(--color-surface);border:1px solid var(--color-border);display:grid;place-items:center;font-size:12px;margin-bottom:10px}
+.service-opt b{font-size:13px;display:block;margin-bottom:2px} .service-opt span{font-size:11px;color:var(--color-text-muted);line-height:1.3;display:block}
+.prefill{background:var(--color-accent);color:var(--color-surface);border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:12px;margin-bottom:18px;border:1px solid var(--color-border-dark)}
+.prefill img{width:48px;height:48px;border-radius:10px;object-fit:cover;background:var(--color-surface-alt);border:1px solid var(--color-border-dark)}
+.summary-row{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--color-border);font-size:13px}
+.summary-row:last-child{border-bottom:0} .summary-row span:first-child{color:var(--color-text-muted)}
+.summary-note{font-size:11px;color:var(--color-text-muted);margin-top:12px;line-height:1.4;background:var(--color-background);padding:10px 12px;border-radius:10px;border:1px solid var(--color-border)}
+
+/* 15. ADMIN */
+.admin-layout{display:grid;grid-template-columns:240px 1fr;min-height:calc(100vh - var(--header-h))}
+.sidebar{background:var(--color-surface);border-right:1px solid var(--color-border);padding:18px 14px;display:flex;flex-direction:column;gap:18px;position:sticky;top:var(--header-h);height:calc(100vh - var(--header-h));overflow:auto}
+.side-section{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--color-text-muted);font-weight:700;margin-bottom:8px;padding-left:8px}
+.side-link{display:flex;align-items:center;gap:10px;padding:10px 10px;border-radius:12px;font-size:13px;font-weight:500;width:100%;text-align:left}
+.side-link.active{background:var(--color-accent);color:var(--color-surface)} .side-link:hover:not(.active){background:var(--color-background)}
+.side-foot{margin-top:auto;padding:12px;border:1px solid var(--color-border);border-radius:14px;background:var(--color-background)}
+.main{padding:24px} .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+.table-wrap{background:var(--color-surface);border:1px solid var(--color-border);border-radius:20px;overflow:hidden}
+.table-scroll{overflow:auto} thead th{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--color-text-muted);font-weight:700;text-align:left;padding:12px;border-bottom:1px solid var(--color-border);background:var(--color-surface-muted);white-space:nowrap}
+tbody td{padding:12px;border-bottom:1px solid var(--color-border);font-size:13px;vertical-align:middle}
+.bike-cell{display:flex;align-items:center;gap:10px} .bike-cell img{width:48px;height:48px;border-radius:10px;object-fit:cover;background:var(--color-surface-alt);border:1px solid var(--color-border)}
+.cards{display:none;grid-template-columns:1fr;gap:12px} .bookings-list{display:grid;gap:10px}
+.booking-card{background:var(--color-surface);border:1px solid var(--color-border);border-radius:16px;padding:14px;display:flex;justify-content:space-between;gap:12px}
+.empty{background:var(--color-surface);border:1px dashed var(--color-border);border-radius:20px;padding:48px 20px;text-align:center}
+
+/* 16. MODALS */
+.backdrop,.modal-backdrop{position:fixed;inset:0;background:rgba(17,19,18,0.42);backdrop-filter:blur(6px);z-index:70;display:none;place-items:center;padding:18px}
+.backdrop.open,.modal-backdrop.open{display:grid}
+.modal{background:var(--color-surface);border-radius:22px;max-width:640px;width:100%;border:1px solid var(--color-border);box-shadow:0 24px 80px rgba(0,0,0,0.18);overflow:hidden;animation:pop .28s var(--ease)}
+@keyframes pop{from{transform:translateY(8px) scale(.98);opacity:0}to{transform:translateY(0) scale(1);opacity:1}}
+.modal-head{padding:18px 20px;border-bottom:1px solid var(--color-border);display:flex;justify-content:space-between;align-items:center}
+.modal-body{padding:18px 20px;max-height:70vh;overflow:auto}
+.modal-foot{padding:14px 20px;border-top:1px solid var(--color-border);display:flex;justify-content:flex-end;gap:10px;background:var(--color-surface-muted)}
+.toast-wrap{position:fixed;bottom:18px;right:18px;z-index:80;display:flex;flex-direction:column;gap:10px}
+.toast{background:var(--color-accent);color:var(--color-surface);padding:12px 14px;border-radius:12px;font-size:13px;display:flex;align-items:center;gap:10px;box-shadow:0 12px 32px rgba(0,0,0,0.18)}
+
+/* 17. FOOTER */
+footer{padding:56px 0 28px;border-top:1px solid var(--color-border);margin-top:48px;background:var(--color-surface-alt)}
+.footer-grid{display:grid;grid-template-columns:1.4fr 0.8fr 0.8fr 1fr;gap:28px;margin-bottom:36px}
+.footer-brand b{font-family:var(--font-display);font-size:20px;letter-spacing:-0.04em}
+.footer-brand p{color:var(--color-text-muted);font-size:13px;margin-top:8px;line-height:1.5;max-width:260px}
+.footer-col h5{font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--color-text-muted);margin-bottom:16px}
+.footer-col a{display:block;font-size:14px;padding:5px 0;opacity:0.9}
+.footer-col a:hover{opacity:1;text-decoration:underline;text-underline-offset:4px}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;gap:16px;padding-top:22px;border-top:1px solid var(--color-border);flex-wrap:wrap}
+.footer-bottom span{font-size:12px;color:var(--color-text-muted)}
+.socials{display:flex;gap:10px} .socials a{width:36px;height:36px;border-radius:50%;border:1px solid var(--color-border);display:grid;place-items:center;background:var(--color-surface)}
+
+/* 18. UTILITIES */
+.hide{display:none!important} .no-scroll{overflow:hidden} html,body{max-width:100vw;overflow-x:hidden}
+
+/* 19. RESPONSIVE */
+@media(max-width:1120px){
+  .bikes-grid{grid-template-columns:repeat(2,1fr)} .services-grid{grid-template-columns:repeat(2,1fr)}
+  .pricing{grid-template-columns:repeat(2,1fr)} .how{grid-template-columns:1fr} .process{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:1024px){
+  .admin-layout{grid-template-columns:1fr} .sidebar{display:none} .stats{grid-template-columns:repeat(2,1fr)}
+  .table-wrap{display:none} .cards{display:grid} .detail-grid,.detail-sections{grid-template-columns:1fr}
+  .info{position:static} .booking-layout{grid-template-columns:1fr} .sticky-col{position:static}
+}
+@media(max-width:900px){
+  :root{--pad-x:20px} .nav-links,.nav-actions .btn-primary,.nav-actions .btn-secondary{display:none}
+  .nav-hamburger{display:grid} .hero-grid{grid-template-columns:1fr;min-height:auto}
+  .hero-copy{padding:32px 22px} .hero-visual{min-height:380px}
+  .why{grid-template-columns:1fr} .why-left{border-right:0;border-bottom:1px solid var(--color-border-dark)}
+  .final{grid-template-columns:1fr;padding:32px 22px} .final-actions{justify-content:flex-start}
+  .page-hero-inner{flex-direction:column;align-items:flex-start} .form-group{grid-template-columns:1fr}
+  .service-grid{grid-template-columns:repeat(2,1fr)} .intro-inner{flex-direction:column;align-items:flex-start}
+}
+@media(max-width:640px){
+  :root{--pad-x:16px} .section{padding:64px 0}
+  .bikes-grid,.pricing,.process,.services{grid-template-columns:1fr}
+  .footer-grid{grid-template-columns:1fr 1fr} .why-right{grid-template-columns:1fr}
+  .why-item{border-right:0} .stats{grid-template-columns:1fr 1fr} .main{padding:16px}
+}
+
+/* 20. ACCESSIBILITY */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:0.01ms!important;transition-duration:0.01ms!important;scroll-behavior:auto!important}
+  .bike-card:hover,.service-card:hover{transform:none}
+}
+:focus-visible{outline:2px solid var(--color-text);outline-offset:2px}
