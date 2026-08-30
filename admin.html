@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard — VOLTERRA</title>
+<meta name="description" content="VOLTERRA Admin Demo — inventory management">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<style>
+:root{
+  --color-primary:#B7F34A; --color-dark:#111312; --color-bg:#F5F5F2; --color-white:#FFFFFF;
+  --color-text-secondary:#6B706C; --color-border:rgba(17,19,18,0.08); --color-border-dark:rgba(255,255,255,0.12);
+  --radius-xl:28px; --radius-lg:18px; --radius-pill:100px; --shadow-card:0 8px 40px rgba(17,19,18,0.06);
+  --max-w:1280px; --pad-x:24px; --error:#D14343;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:Inter,system-ui,sans-serif;background:var(--color-bg);color:var(--color-dark);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+h1,h2,h3,h4{font-family:Manrope,sans-serif;letter-spacing:-0.03em}
+a{color:inherit;text-decoration:none} img{display:block;max-width:100%} button{border:0;background:none;font:inherit;cursor:pointer}
+.container{width:100%;max-width:var(--max-w);margin:0 auto;padding-left:var(--pad-x);padding-right:var(--pad-x)}
+.eyebrow{font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--color-text-secondary)}
+.btn-primary{display:inline-flex;align-items:center;gap:10px;background:var(--color-primary);color:var(--color-dark);padding:12px 18px;border-radius:var(--radius-pill);font-weight:600;font-size:13px;transition:.18s;white-space:nowrap;justify-content:center}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(183,243,74,0.35)}
+.btn-secondary{display:inline-flex;align-items:center;gap:10px;border:1px solid var(--color-border);background:var(--color-white);padding:12px 18px;border-radius:var(--radius-pill);font-weight:600;font-size:13px;transition:.18s;justify-content:center}
+.btn-secondary:hover{border-color:var(--color-dark)}
+.btn-dark{display:inline-flex;align-items:center;gap:10px;background:var(--color-dark);color:var(--color-white);padding:12px 18px;border-radius:var(--radius-pill);font-weight:600;font-size:13px}
+.btn-danger{background:#111312;color:#fff;padding:12px 18px;border-radius:var(--radius-pill);font-weight:600;font-size:13px}
+.admin-header{position:sticky;top:0;z-index:50;background:rgba(245,245,242,0.9);backdrop-filter:saturate(180%) blur(16px);border-bottom:1px solid var(--color-border)}
+.admin-nav{height:64px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-family:Manrope,sans-serif;font-weight:800;font-size:18px;letter-spacing:-0.04em;display:flex;align-items:center;gap:8px}
+.logo-mark{width:28px;height:28px;background:var(--color-dark);color:var(--color-primary);display:grid;place-items:center;border-radius:8px;font-size:12px;font-weight:800}
+.admin-title{display:flex;align-items:center;gap:10px}
+.admin-title span{font-size:11px;color:var(--color-text-secondary);border:1px solid var(--color-border);padding:4px 8px;border-radius:100px;background:var(--color-white)}
+.admin-layout{display:grid;grid-template-columns:240px 1fr;min-height:calc(100vh - 64px)}
+.sidebar{background:var(--color-white);border-right:1px solid var(--color-border);padding:18px 14px;display:flex;flex-direction:column;gap:18px;position:sticky;top:64px;height:calc(100vh - 64px);overflow:auto}
+.side-section{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--color-text-secondary);font-weight:700;margin-bottom:8px;padding-left:8px}
+.side-link{display:flex;align-items:center;gap:10px;padding:10px 10px;border-radius:12px;font-size:13px;font-weight:500;transition:.18s;width:100%;text-align:left}
+.side-link i{width:18px;text-align:center;font-size:13px}
+.side-link.active{background:var(--color-dark);color:var(--color-white)}
+.side-link:hover:not(.active){background:var(--color-bg)}
+.side-foot{margin-top:auto;padding:12px;border:1px solid var(--color-border);border-radius:14px;background:var(--color-bg)}
+.side-foot b{font-size:12px;display:block} .side-foot span{font-size:11px;color:var(--color-text-secondary)}
+.main{padding:24px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+.stat-card{background:var(--color-white);border:1px solid var(--color-border);border-radius:18px;padding:16px}
+.stat-card .k{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--color-text-secondary);font-weight:700;margin-bottom:6px}
+.stat-card .v{font-family:Manrope,sans-serif;font-size:26px;font-weight:800;line-height:1}
+.stat-card .sub{font-size:11px;color:var(--color-text-secondary);margin-top:6px}
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:16px}
+.search{position:relative;flex:1 1 240px;max-width:360px}
+.search i{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--color-text-secondary);font-size:12px}
+.search input{width:100%;padding:11px 12px 11px 34px;border-radius:100px;border:1px solid var(--color-border);background:var(--color-white);font-size:13px;outline:none}
+.search input:focus{border-color:var(--color-dark)}
+.filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.filters select{padding:10px 28px 10px 12px;border-radius:100px;border:1px solid var(--color-border);background:var(--color-white);font-size:12px;font-weight:500;appearance:none;cursor:pointer}
+.table-wrap{background:var(--color-white);border:1px solid var(--color-border);border-radius:20px;overflow:hidden}
+.table-scroll{overflow:auto}
+table{width:100%;border-collapse:collapse;min-width:900px}
+thead th{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--color-text-secondary);font-weight:700;text-align:left;padding:12px;border-bottom:1px solid var(--color-border);background:#FAFAF8;white-space:nowrap}
+tbody td{padding:12px;border-bottom:1px solid var(--color-border);font-size:13px;vertical-align:middle}
+.bike-cell{display:flex;align-items:center;gap:10px}
+.bike-cell img{width:48px;height:48px;border-radius:10px;object-fit:cover;background:#EEEDE8;border:1px solid var(--color-border)}
+.bike-cell .ph{width:48px;height:48px;border-radius:10px;background:#EEEDE8;display:grid;place-items:center;font-size:10px;color:var(--color-text-secondary);border:1px solid var(--color-border)}
+.badge{font-size:10px;font-weight:600;letter-spacing:0.06em;padding:4px 8px;border-radius:100px;display:inline-block;border:1px solid var(--color-border)}
+.badge.available{background:#EAF5D0;border-color:#D6E8A8} .badge.sold{background:#EEEDE8}
+.badge.excellent{background:var(--color-dark);color:#fff} .badge.great{background:#2A332E;color:#DDE7D3}
+.actions{display:flex;gap:6px}
+.icon-btn{width:32px;height:32px;border-radius:50%;border:1px solid var(--color-border);background:var(--color-white);display:grid;place-items:center;transition:.18s}
+.icon-btn:hover{border-color:var(--color-dark);transform:translateY(-1px)}
+.cards{display:none;grid-template-columns:1fr;gap:12px}
+.bike-card{background:var(--color-white);border:1px solid var(--color-border);border-radius:18px;overflow:hidden;display:flex;gap:12px;padding:12px}
+.bike-card img{width:84px;height:84px;border-radius:12px;object-fit:cover;background:#EEEDE8;flex:0 0 84px}
+.bike-card .ph{width:84px;height:84px;border-radius:12px;background:#EEEDE8;display:grid;place-items:center;color:var(--color-text-secondary);font-size:10px;flex:0 0 84px;border:1px solid var(--color-border)}
+.empty{background:var(--color-white);border:1px dashed var(--color-border);border-radius:20px;padding:48px 20px;text-align:center}
+.backdrop{position:fixed;inset:0;background:rgba(17,19,18,0.42);backdrop-filter:blur(6px);z-index:70;display:none;place-items:center;padding:18px}
+.backdrop.open{display:grid}
+.modal{background:var(--color-white);border-radius:22px;max-width:640px;width:100%;border:1px solid var(--color-border);box-shadow:0 24px 80px rgba(0,0,0,0.18);overflow:hidden;animation:pop .28s}
+@keyframes pop{from{transform:translateY(8px) scale(.98);opacity:0}to{transform:translateY(0) scale(1);opacity:1}}
+.modal-head{padding:18px 20px;border-bottom:1px solid var(--color-border);display:flex;justify-content:space-between;align-items:center}
+.modal-body{padding:18px 20px;max-height:70vh;overflow:auto}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field.full{grid-column:1/-1}
+.field label{font-size:11px;font-weight:600}
+.field input,.field select,.field textarea{padding:11px 12px;border-radius:12px;border:1px solid var(--color-border);background:var(--color-bg);font-size:13px;outline:none}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--color-dark);background:var(--color-white)}
+.field small.err{font-size:11px;color:var(--error);display:none} .field.invalid small.err{display:block} .field.invalid input{border-color:var(--error);background:#FFF6F6}
+.modal-foot{padding:14px 20px;border-top:1px solid var(--color-border);display:flex;justify-content:flex-end;gap:10px;background:#FAFAF8}
+.toast-wrap{position:fixed;bottom:18px;right:18px;z-index:80;display:flex;flex-direction:column;gap:10px}
+.toast{background:var(--color-dark);color:var(--color-white);padding:12px 14px;border-radius:12px;font-size:13px;display:flex;align-items:center;gap:10px;box-shadow:0 12px 32px rgba(0,0,0,0.18)}
+.bookings-list{display:grid;gap:10px}
+.booking-card{background:var(--color-white);border:1px solid var(--color-border);border-radius:16px;padding:14px;display:flex;justify-content:space-between;gap:12px}
+@media(max-width:1024px){
+  .admin-layout{grid-template-columns:1fr} .sidebar{display:none}
+  .stats{grid-template-columns:repeat(2,1fr)} .table-wrap{display:none} .cards{display:grid} .form-grid{grid-template-columns:1fr}
+}
+@media(max-width:640px){:root{--pad-x:16px} .stats{grid-template-columns:1fr 1fr} .main{padding:16px}}
+</style>
+</head>
+<body>
+
+<header class="admin-header">
+  <div class="container admin-nav">
+    <div class="admin-title">
+      <a class="logo" href="index.html"><span class="logo-mark">V</span> VOLTERRA</a>
+      <span>Admin Dashboard</span>
+      <b style="font-size:12px;opacity:0.6">Demo</b>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center">
+      <a class="btn-secondary" href="bikes.html"><i class="fa-solid fa-bicycle"></i> View Bikes</a>
+      <a class="btn-primary" href="index.html"><i class="fa-solid fa-arrow-up-right-from-square"></i> View Website</a>
+    </div>
+  </div>
+</header>
+
+<div class="admin-layout">
+  <aside class="sidebar">
+    <div>
+      <div class="side-section">Overview</div>
+      <button class="side-link active" data-tab="dashboard"><i class="fa-solid fa-chart-simple"></i> Dashboard</button>
+      <button class="side-link" data-tab="inventory"><i class="fa-solid fa-boxes-stacked"></i> Inventory</button>
+      <button class="side-link" data-tab="bookings"><i class="fa-solid fa-calendar-check"></i> Bookings <span id="bookingCountBadge" style="margin-left:auto;background:var(--color-primary);color:#111312;padding:2px 6px;border-radius:100px;font-size:10px;display:none">0</span></button>
+    </div>
+    <div>
+      <div class="side-section">Actions</div>
+      <button class="side-link" id="openAddFromSide"><i class="fa-solid fa-plus"></i> Add Bike</button>
+      <button class="side-link" id="resetData"><i class="fa-solid fa-rotate-left"></i> Reset Demo Data</button>
+    </div>
+    <div>
+      <div class="side-section">Public</div>
+      <a class="side-link" href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+      <a class="side-link" href="bikes.html"><i class="fa-solid fa-bicycle"></i> Used E-Bikes</a>
+      <a class="side-link" href="services.html"><i class="fa-solid fa-screwdriver-wrench"></i> Services</a>
+      <a class="side-link" href="book-service.html"><i class="fa-solid fa-calendar"></i> Book Service</a>
+    </div>
+    <div class="side-foot">
+      <b>VOLTERRA Demo Admin</b>
+      <span>Frontend only · localStorage: ebike_bikes & ebike_bookings<br>No Base64, no external images</span>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="stats" id="stats">
+      <div class="stat-card"><div class="k">Total Bikes</div><div class="v" id="statTotal">0</div><div class="sub">All inventory items</div></div>
+      <div class="stat-card"><div class="k">Available</div><div class="v" id="statAvail">0</div><div class="sub">Ready to sell</div></div>
+      <div class="stat-card"><div class="k">Sold</div><div class="v" id="statSold">0</div><div class="sub">Marked as sold</div></div>
+      <div class="stat-card"><div class="k">Avg. Price</div><div class="v" id="statAvg">$0</div><div class="sub">Across all bikes</div></div>
+    </div>
+
+    <div class="toolbar" id="inventoryToolbar">
+      <div class="search"><i class="fa-solid fa-magnifying-glass"></i><input id="searchInput" type="search" placeholder="Search bikes by brand, model, year..."></div>
+      <div class="filters">
+        <select id="statusFilter"><option value="all">All Status</option><option value="Available">Available</option><option value="Sold">Sold</option></select>
+        <select id="conditionFilter"><option value="all">All Conditions</option><option value="Excellent">Excellent</option><option value="Great">Great</option><option value="Good">Good</option></select>
+        <button class="btn-primary" id="openAdd"><i class="fa-solid fa-plus"></i> Add Bike</button>
+      </div>
+    </div>
+
+    <div class="table-wrap" id="tableWrap">
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Bike</th><th>Brand</th><th>Model</th><th>Year</th><th>Price</th><th>Mileage</th><th>Battery</th><th>Condition</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="cards" id="cards"></div>
+
+    <div class="empty" id="emptyState" style="display:none">
+      <h3>No bikes found</h3>
+      <p style="font-size:13px;color:var(--color-text-secondary);margin:8px 0 14px">Your inventory is currently empty or no results match your search.</p>
+      <button class="btn-primary" id="emptyAdd"><i class="fa-solid fa-plus"></i> Add Your First Bike</button>
+    </div>
+
+    <div id="bookingsSection" style="display:none;margin-top:20px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <h2 style="font-size:20px">Service Bookings</h2><span class="eyebrow">from localStorage ebike_bookings</span>
+      </div>
+      <div class="bookings-list" id="bookingsList"></div>
+    </div>
+  </main>
+</div>
+
+<!-- Add/Edit Modal -->
+<div class="backdrop" id="bikeModal" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true">
+    <div class="modal-head"><h3 id="modalTitle">Add Bike</h3><button class="icon-btn" id="closeModal"><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="field full"><label>Image URL — local placeholder only</label><input id="inputImage" type="text" placeholder="assets/images/bikes/bike-1.jpg"><small class="err">Use assets/images/bikes/...</small></div>
+        <div class="field" id="f-brand"><label>Brand *</label><input id="inputBrand" placeholder="Trek"><small class="err">Brand required</small></div>
+        <div class="field" id="f-model"><label>Model *</label><input id="inputModel" placeholder="Powerfly 4"><small class="err">Model required</small></div>
+        <div class="field" id="f-price"><label>Price * ($)</label><input id="inputPrice" type="number" min="0" placeholder="2100"><small class="err">Valid price required</small></div>
+        <div class="field" id="f-year"><label>Year *</label><input id="inputYear" type="number" min="2015" max="2026" placeholder="2023"><small class="err">Valid year 2015-2026</small></div>
+        <div class="field" id="f-mileage"><label>Mileage (km)</label><input id="inputMileage" type="number" min="0" placeholder="1240"><small class="err">Must be >=0</small></div>
+        <div class="field" id="f-battery"><label>Battery</label><input id="inputBattery" placeholder="625 Wh"></div>
+        <div class="field"><label>Frame Size</label><select id="inputFrame"><option value="S">S</option><option value="M" selected>M</option><option value="L">L</option><option value="One Size">One Size</option></select></div>
+        <div class="field"><label>Condition</label><select id="inputCondition"><option>Excellent</option><option>Great</option><option>Good</option></select></div>
+        <div class="field"><label>Status *</label><select id="inputStatus"><option>Available</option><option>Sold</option></select></div>
+        <div class="field full"><label>Description</label><textarea id="inputDesc" rows="3" placeholder="Well-maintained used e-bike, inspected..."></textarea></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-secondary" id="cancelModal">Cancel</button>
+      <button class="btn-primary" id="saveModal"><i class="fa-solid fa-check"></i> <span id="saveText">Add Bike</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Modal -->
+<div class="backdrop" id="deleteModal" aria-hidden="true">
+  <div class="modal" style="max-width:420px">
+    <div class="modal-head"><h3>Delete this bike?</h3><button class="icon-btn" id="closeDelete"><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="modal-body">
+      <p style="font-size:13px;color:var(--color-text-secondary);line-height:1.5">Are you sure you want to remove <b id="deleteName">this bike</b> from the inventory?</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-secondary" id="cancelDelete">Cancel</button>
+      <button class="btn-danger" id="confirmDelete"><i class="fa-solid fa-trash"></i> Delete Bike</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script src="data/bikes.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>
