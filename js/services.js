@@ -21,7 +21,7 @@
   });
 
   // --- Image fallback for local placeholders ---
-  // All images in services.html are now: assets/images/services/...
+  // Service images use assets/images/services/... when you add them
   // If file doesn't exist, show "Image coming soon" placeholder without breaking layout
   window.handleServiceImgError = function(img){
     if(img.dataset.failed) return;
