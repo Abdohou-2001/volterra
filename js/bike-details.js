@@ -12,7 +12,7 @@
 
   function findBike(){
     if(!id) return null;
-    return (window.BIKES||[]).find(b=> String(b.id)===String(id)) || null;
+    try { const raw=localStorage.getItem('ebike_bikes'); const stored=raw?JSON.parse(raw):null; if(Array.isArray(stored)&&stored.length){ return stored.find(b=>String(b.id)===String(id)) || null; } } catch(e) {} return (window.BIKES||window.bikes||[]).find(b=> String(b.id)===String(id)) || null;
   }
 
   const bike = findBike();
