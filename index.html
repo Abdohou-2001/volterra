@@ -177,7 +177,7 @@ button{border:0;background:none;font:inherit;cursor:pointer}
 }
 .bike-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-card)}
 .bike-img{position:relative;aspect-ratio:1.2/1;overflow:hidden;background:#EEF0EB}
-.bike-img img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease}
+.bike-img img{width:100%;height:100%;object-fit:contain;object-position:center;padding:10px;transition:transform .6s ease}
 .bike-card:hover .bike-img img{transform:scale(1.04)}
 .badge{
   position:absolute;top:12px;left:12px;
@@ -453,7 +453,10 @@ footer{padding:56px 0 28px;border-top:1px solid var(--color-border)}
             <p class="eyebrow" style="color:var(--color-primary);margin-bottom:18px">Why VOLTERRA</p>
             <h2>Not Just Used.<br>Ready to Ride.</h2>
             <p>Every bike is bought selectively, stripped, checked and serviced before it gets a VOLTERRA badge. You see the real report.</p>
-            <div class="why-visual" aria-label="Workshop inspection image placeholder"><div class="image-placeholder"><i class="fa-solid fa-screwdriver-wrench"></i><span>Workshop image coming soon</span></div></div>
+            <div class="why-visual" aria-label="Workshop inspection image">
+              <img src="assets/images/services/workshop.jpg" alt="VOLTERRA workshop inspection" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'">
+              <div class="image-placeholder" style="display:none"><i class="fa-solid fa-screwdriver-wrench"></i><span>Add: assets/images/services/workshop.jpg</span></div>
+            </div>
           </div>
           <div class="why-right">
             <div class="why-item">
