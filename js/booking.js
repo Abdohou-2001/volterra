@@ -3,7 +3,7 @@
 // Validation, live summary, localStorage, bike prefill from ?bike=id with fallback
 
 (function(){
-  const FALLBACK_IMG = 'assets/images/bikes/bike-1.jpg'; // local placeholder fallback
+  const FALLBACK_IMG = 'assets/images/bikes/bike-01-1.jpg';
 
   const SERVICES = [
     { id:'general', name:'General Maintenance', icon:'fa-screwdriver-wrench', desc:'Routine checks & adjustments' },
