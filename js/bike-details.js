@@ -10,9 +10,29 @@
   const errorRoot = $('#errorRoot');
   const crumbName = $('#crumbName');
 
+  function canonicalImagePath(id,index=1){
+    const n=String(Number(id)||0).padStart(2,'0');
+    return `assets/images/bikes/bike-${n}-${index}.jpg`;
+  }
+  function canonicalizeImage(path,bikeId,index=1){
+    if(!path || typeof path!=='string') return canonicalImagePath(bikeId,index);
+    const m=path.match(/bike-(\d+)(?:-(\d+))?\.jpg$/i);
+    if(m) return canonicalImagePath(m[1], m[2] ? Number(m[2]) : 1);
+    return path.startsWith('assets/') ? path : canonicalImagePath(bikeId,index);
+  }
+  function normalizeBike(b){
+    const idNum=Number(b.id);
+    const images=Array.isArray(b.images)&&b.images.length ? b.images.map((x,i)=>canonicalizeImage(x,idNum,i+1)) : [canonicalImagePath(idNum,1)];
+    return {...b,id:idNum,price:Number(b.price)||0,year:Number(b.year)||0,mileage:Number(b.mileage)||0,
+      batteryLabel:b.batteryLabel || (typeof b.battery==='number'?`${b.battery} Wh`:String(b.battery||'—')),
+      condition:b.condition||'Good',conditionTag:b.conditionTag||b.condition||'Good',frameSize:b.frameSize||'M',
+      batteryHealth:Number(b.batteryHealth)||90,image:canonicalizeImage(b.image,idNum,1),images};
+  }
   function findBike(){
     if(!id) return null;
-    try { const raw=localStorage.getItem('ebike_bikes'); const stored=raw?JSON.parse(raw):null; if(Array.isArray(stored)&&stored.length){ return stored.find(b=>String(b.id)===String(id)) || null; } } catch(e) {} return (window.BIKES||window.bikes||[]).find(b=> String(b.id)===String(id)) || null;
+    try { const raw=localStorage.getItem('ebike_bikes'); const stored=raw?JSON.parse(raw):null; if(Array.isArray(stored)&&stored.length){ const found=stored.find(b=>String(b.id)===String(id)); if(found) return normalizeBike(found); } } catch(e) {}
+    const found=(window.BIKES||window.bikes||[]).find(b=> String(b.id)===String(id));
+    return found ? normalizeBike(found) : null;
   }
 
   const bike = findBike();
@@ -33,7 +53,7 @@
   if(crumbName) crumbName.textContent = `${bike.brand} ${bike.model}`;
 
   // LOCAL IMAGES ONLY — no fallback external
-  // Structure: bike-1.jpg, bike-1-2.jpg, bike-1-3.jpg, bike-1-4.jpg
+  // Canonical structure: bike-01-1.jpg, bike-01-2.jpg, bike-01-3.jpg, ...
   const galleryImages = (bike.images && bike.images.length)? bike.images : [bike.image];
 
   const save = bike.originalPrice? bike.originalPrice - bike.price : 0;
