@@ -1,4 +1,6 @@
-// bike-details.js — renders bike from URL id, gallery, related
+// bike-details.js — VOLTERRA — LOCAL PLACEHOLDERS ONLY
+// No Base64, No Unsplash, No external URLs
+// Handles: gallery, thumbnails, prev/next, keyboard, related bikes, fallback placeholder
 (function(){
   const $ = s=> document.querySelector(s);
   const params = new URLSearchParams(location.search);
@@ -19,8 +21,7 @@
     errorRoot.style.display='block';
     detailRoot.style.display='none';
     document.title = 'Bike not found — VOLTERRA';
-    crumbName.textContent = 'Not found';
-    // drawer logic still
+    if(crumbName) crumbName.textContent = 'Not found';
     bindDrawer();
     return;
   }
@@ -29,23 +30,39 @@
   document.title = `${bike.brand} ${bike.model} | Used E-Bikes — VOLTERRA`;
   const metaDesc = document.getElementById('metaDesc');
   if(metaDesc) metaDesc.content = `${bike.brand} ${bike.model} ${bike.year} — ${bike.mileage}km, ${bike.batteryLabel}, ${bike.condition}. Inspected used e-bike at VOLTERRA Berlin.`;
-  crumbName.textContent = `${bike.brand} ${bike.model}`;
+  if(crumbName) crumbName.textContent = `${bike.brand} ${bike.model}`;
 
-  const galleryImages = (bike.images && bike.images.length) ? bike.images : [bike.fallback || bike.image];
+  // LOCAL IMAGES ONLY — no fallback external
+  // Structure: bike-1.jpg, bike-1-2.jpg, bike-1-3.jpg, bike-1-4.jpg
+  const galleryImages = (bike.images && bike.images.length)? bike.images : [bike.image];
 
-  const save = bike.originalPrice ? bike.originalPrice - bike.price : 0;
+  const save = bike.originalPrice? bike.originalPrice - bike.price : 0;
+
+  // Helper to create safe image tag with fallback
+  function imgTag(src, alt, extra=''){
+    return `<img src="${escapeAttr(src)}" alt="${escapeAttr(alt)}" loading="lazy" onerror="handleImgError(this)" ${extra}>`;
+  }
+
+  function escapeAttr(s){ return String(s||'').replace(/"/g,'&quot;'); }
 
   detailRoot.innerHTML = `
   <div class="detail-grid">
     <div class="gallery">
-      <div class="main-img-wrap">
+      <div class="main-img-wrap" id="mainWrap">
         <span class="badge">${bike.conditionTag || bike.condition}</span>
         <button class="nav-arrow prev" aria-label="Previous image"><i class="fa-solid fa-chevron-left"></i></button>
         <button class="nav-arrow next" aria-label="Next image"><i class="fa-solid fa-chevron-right"></i></button>
-        <img id="mainImg" src="${galleryImages[0]}" alt="${bike.brand} ${bike.model} main image">
+        <div id="mainImgContainer" style="width:100%;height:100%;display:grid;place-items:center">
+          ${imgTag(galleryImages[0], `${bike.brand} ${bike.model} main image`, 'id="mainImg" style="width:100%;height:100%;object-fit:cover"')}
+        </div>
       </div>
       <div class="thumbs" id="thumbs">
-        ${galleryImages.map((src,i)=>`<button class="thumb ${i===0?'active':''}" data-idx="${i}" aria-label="Image ${i+1}"><img src="${src}" alt="${bike.brand} ${bike.model} thumbnail ${i+1}" loading="lazy"></button>`).join('')}
+        ${galleryImages.map((src,i)=>`
+          <button class="thumb ${i===0?'active':''}" data-idx="${i}" aria-label="Image ${i+1}">
+            ${imgTag(src, `${bike.brand} ${bike.model} thumbnail ${i+1}`)}
+            <span style="display:none" class="thumb-fallback">coming soon</span>
+          </button>
+        `).join('')}
       </div>
     </div>
 
@@ -116,57 +133,88 @@
   </div>
   `;
 
+  // --- Fallback handler for missing local images ---
+  window.handleImgError = function(img){
+    if(img.dataset.failed) return;
+    img.dataset.failed = "1";
+    img.style.display = "none";
+    const filename = img.src.split('/').pop();
+    const ph = document.createElement('div');
+    ph.className = 'img-placeholder';
+    ph.innerHTML = `<i class="fa-solid fa-image"></i><span>Image coming soon<br>${filename}</span>`;
+    // If thumb, show inside thumb
+    if(img.closest('.thumb')){
+      ph.style.cssText = 'position:absolute;inset:0;display:grid;place-items:center;background:#EEEDE8;font-size:9px';
+      img.parentNode.style.position = 'relative';
+      img.parentNode.appendChild(ph);
+    } else {
+      img.parentNode.appendChild(ph);
+    }
+  };
+
   // Gallery logic
   let current = 0;
-  const mainImg = $('#mainImg');
+  const mainImgContainer = document.getElementById('mainImgContainer');
+  let mainImg = document.getElementById('mainImg');
   const thumbs = document.getElementById('thumbs');
+
   function setImage(idx){
     current = (idx+galleryImages.length)%galleryImages.length;
-    mainImg.style.opacity='0';
-    setTimeout(()=>{ mainImg.src=galleryImages[current]; mainImg.style.opacity='1'; }, 120);
-    [...thumbs.children].forEach((t,i)=> t.classList.toggle('active', i===current));
+    // fade effect
+    mainImgContainer.style.opacity = '0';
+    setTimeout(()=>{
+      mainImgContainer.innerHTML = `<img id="mainImg" src="${galleryImages[current]}" alt="${bike.brand} ${bike.model} main image" style="width:100%;height:100%;object-fit:cover;transition:opacity.28s" loading="lazy" onerror="handleImgError(this)">`;
+      mainImg = document.getElementById('mainImg');
+      mainImgContainer.style.opacity = '1';
+      [...thumbs.children].forEach((t,i)=> t.classList.toggle('active', i===current));
+    }, 120);
   }
+
   thumbs.addEventListener('click', e=>{
     const btn = e.target.closest('.thumb');
     if(!btn) return;
     setImage(Number(btn.dataset.idx));
   });
+
   detailRoot.querySelector('.nav-arrow.prev').addEventListener('click', ()=> setImage(current-1));
   detailRoot.querySelector('.nav-arrow.next').addEventListener('click', ()=> setImage(current+1));
+
   document.addEventListener('keydown', e=>{
     if(e.key==='ArrowLeft') setImage(current-1);
     if(e.key==='ArrowRight') setImage(current+1);
   });
 
-  // Related bikes — 3, exclude current, prefer same brand then random
+  // Related bikes — 3, exclude current, prefer same brand
   function related(){
-    const others = window.BIKES.filter(b=> b.id!==bike.id);
+    const others = (window.BIKES||[]).filter(b=> b.id!==bike.id);
     const sameBrand = others.filter(b=> b.brand===bike.brand);
-    const pool = [...sameBrand, ...others.filter(b=> b.brand!==bike.brand)];
+    const pool = [...sameBrand,...others.filter(b=> b.brand!==bike.brand)];
     const picked = pool.slice(0,3);
-    // fallback if less than 3
     while(picked.length<3 && others.length>picked.length){
-      const remaining = others.filter(b=> !picked.includes(b));
-      picked.push(remaining[0]);
+      const remaining = others.filter(b=>!picked.includes(b));
+      if(remaining[0]) picked.push(remaining[0]);
+      else break;
     }
     return picked.slice(0,3);
   }
 
   const relatedGrid = document.getElementById('relatedGrid');
-  relatedGrid.innerHTML = related().map(b=>`
-    <article class="bike-card">
-      <div class="bike-img">
-        <span class="badge-card">${b.conditionTag || b.condition}</span>
-        <img src="${b.fallback || b.image}" alt="${b.brand} ${b.model}" loading="lazy">
-      </div>
-      <div class="bike-body">
-        <div class="bike-brand">${b.brand}</div>
-        <div class="bike-name">${b.model}</div>
-        <div class="bike-specs"><span>${b.year}</span><span class="dot"></span><span>${b.mileage.toLocaleString()} km</span><span class="dot"></span><span>${b.batteryLabel}</span></div>
-        <div class="bike-foot"><span class="bike-price">$${b.price.toLocaleString()}</span><a class="bike-link" href="bike-details.html?id=${b.id}">View Details <i class="fa-solid fa-arrow-right"></i></a></div>
-      </div>
-    </article>
-  `).join('');
+  if(relatedGrid){
+    relatedGrid.innerHTML = related().map(b=>`
+      <article class="bike-card">
+        <div class="bike-img">
+          <span class="badge-card">${b.conditionTag || b.condition}</span>
+          <img src="${b.image}" alt="${b.brand} ${b.model}" loading="lazy" onerror="handleImgError(this)">
+        </div>
+        <div class="bike-body">
+          <div class="bike-brand">${b.brand}</div>
+          <div class="bike-name">${b.model}</div>
+          <div class="bike-specs"><span>${b.year}</span><span class="dot"></span><span>${b.mileage.toLocaleString()} km</span><span class="dot"></span><span>${b.batteryLabel}</span></div>
+          <div class="bike-foot"><span class="bike-price">$${b.price.toLocaleString()}</span><a class="bike-link" href="bike-details.html?id=${b.id}">View Details <i class="fa-solid fa-arrow-right"></i></a></div>
+        </div>
+      </article>
+    `).join('');
+  }
 
   bindDrawer();
 
