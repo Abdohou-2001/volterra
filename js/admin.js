@@ -1,6 +1,6 @@
-// admin.js — VOLTERRA Admin Demo — LOCAL PLACEHOLDERS ONLY
-// No Base64, No Unsplash, No external URLs
-// Uses localStorage ebike_bikes, graceful image fallback
+// admin.js — VOLTERRA Admin
+// Inventory is stored in localStorage. Uploaded images are resized and stored as data URLs so
+// the static GitHub Pages demo can display them without a backend. External image URLs are not used.
 
 (function(){
   const STORAGE_KEY = 'ebike_bikes';
@@ -19,7 +19,8 @@
       const fileIndex = m[2] ? Number(m[2]) : 1;
       return canonicalImagePath(fileId,fileIndex);
     }
-    return path.startsWith('assets/') ? path : canonicalImagePath(id,index);
+    if(path.startsWith('assets/') || path.startsWith('data:image/')) return path;
+    return canonicalImagePath(id,index);
   }
   function normalizeBike(b){
     const localImg = canonicalizeImage(b.image, b.id, 1);
@@ -224,10 +225,59 @@
     return ok;
   }
 
-  function collectForm(idForNewBike=null){
+  function getSelectedImageFile(){
+    return $('#inputImageFile')?.files?.[0] || null;
+  }
+
+  function resizeImageFile(file, maxSize=1600, quality=0.82){
+    return new Promise((resolve,reject)=>{
+      if(!file) return resolve('');
+      if(!file.type.startsWith('image/')) return reject(new Error('Please choose an image file.'));
+      const reader = new FileReader();
+      reader.onerror = ()=> reject(new Error('Could not read the image.'));
+      reader.onload = ()=>{
+        const img = new Image();
+        img.onerror = ()=> reject(new Error('Could not decode the image.'));
+        img.onload = ()=>{
+          const scale = Math.min(1, maxSize / Math.max(img.naturalWidth, img.naturalHeight));
+          const w = Math.max(1, Math.round(img.naturalWidth * scale));
+          const h = Math.max(1, Math.round(img.naturalHeight * scale));
+          const canvas = document.createElement('canvas');
+          canvas.width=w; canvas.height=h;
+          const ctx=canvas.getContext('2d');
+          if(!ctx) return reject(new Error('Image processing is not supported.'));
+          ctx.drawImage(img,0,0,w,h);
+          resolve(canvas.toDataURL('image/jpeg', quality));
+        };
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function setImagePreview(src, fileName='No file selected'){
+    const preview=$('#imagePreview'), img=$('#imagePreviewImg'), name=$('#imageFileName');
+    if(name) name.textContent=fileName;
+    if(img && preview){
+      if(src){ img.src=src; preview.style.display='block'; }
+      else { img.removeAttribute('src'); preview.style.display='none'; }
+    }
+  }
+
+  async function collectForm(idForNewBike=null, existing=null){
     const imgInput = $('#inputImage')?.value.trim() || '';
+    const selectedFile = getSelectedImageFile();
     const fallback = idForNewBike ? canonicalImagePath(idForNewBike,1) : FALLBACK_LOCAL;
-    const img = imgInput.startsWith('assets/') ? canonicalizeImage(imgInput, idForNewBike || 1, 1) : fallback;
+    let img = existing?.image || fallback;
+
+    if(selectedFile){
+      img = await resizeImageFile(selectedFile);
+    } else if(imgInput.startsWith('assets/') || imgInput.startsWith('data:image/')){
+      img = canonicalizeImage(imgInput, idForNewBike || 1, 1);
+    } else if(imgInput){
+      img = existing?.image || fallback;
+    }
+
     return {
       brand: $('#inputBrand').value.trim(),
       model: $('#inputModel').value.trim(),
@@ -240,7 +290,7 @@
       condition: $('#inputCondition').value,
       status: $('#inputStatus').value,
       image: img,
-      images: [1,2,3,4].map(i=>canonicalImagePath(idForNewBike || 1,i)),
+      images: existing?.images?.length ? existing.images : [img],
       description: $('#inputDesc').value.trim(),
     };
   }
@@ -250,6 +300,8 @@
     const mt = $('#modalTitle'); if(mt) mt.textContent='Add Bike';
     const st = $('#saveText'); if(st) st.textContent='Add Bike';
     if($('#inputImage')) $('#inputImage').value='';
+    if($('#inputImageFile')) $('#inputImageFile').value='';
+    setImagePreview('');
     if($('#inputBrand')) $('#inputBrand').value='';
     if($('#inputModel')) $('#inputModel').value='';
     if($('#inputPrice')) $('#inputPrice').value='';
@@ -269,7 +321,9 @@
     editingId=id;
     const mt = $('#modalTitle'); if(mt) mt.textContent='Edit Bike';
     const st = $('#saveText'); if(st) st.textContent='Save Changes';
-    if($('#inputImage')) $('#inputImage').value = bike.image===FALLBACK_LOCAL? '' : bike.image;
+    if($('#inputImage')) $('#inputImage').value = (bike.image && !bike.image.startsWith('data:image/') && bike.image!==FALLBACK_LOCAL) ? bike.image : '';
+    if($('#inputImageFile')) $('#inputImageFile').value='';
+    setImagePreview(bike.image || '', bike.image?.startsWith('data:image/') ? 'Current uploaded image' : (bike.image || 'Current image'));
     if($('#inputBrand')) $('#inputBrand').value=bike.brand;
     if($('#inputModel')) $('#inputModel').value=bike.model;
     if($('#inputPrice')) $('#inputPrice').value=bike.price;
@@ -283,30 +337,34 @@
     openModal();
   }
 
-  function saveBike(){
+  async function saveBike(){
     if(!validateForm()){ showToast('Please fix highlighted fields','fa-circle-exclamation'); return; }
-    if(editingId){
-      const idx = bikes.findIndex(b=> String(b.id)===String(editingId));
-      if(idx>=0){
-        const current = bikes[idx];
-        const data = collectForm(current.id);
-        if(!$('#inputImage')?.value.trim()){
-          data.image = current.image || canonicalImagePath(current.id,1);
-          data.images = Array.isArray(current.images) && current.images.length ? current.images : [data.image];
+    const saveBtn=document.getElementById('saveModal');
+    if(saveBtn) saveBtn.disabled=true;
+    try{
+      if(editingId){
+        const idx = bikes.findIndex(b=> String(b.id)===String(editingId));
+        if(idx>=0){
+          const current = bikes[idx];
+          const data = await collectForm(current.id, current);
+          bikes[idx] = {...current,...data,id:current.id};
+          showToast('Bike updated successfully','fa-circle-check');
         }
-        bikes[idx] = {...current,...data,id:current.id};
-        showToast('Bike updated successfully','fa-circle-check');
+      } else {
+        const newId = bikes.length? Math.max(...bikes.map(b=> Number(b.id)||0))+1 : 1;
+        const data = await collectForm(newId, null);
+        const newBike = { id:newId,...data };
+        bikes.unshift(newBike);
+        showToast('Bike added successfully','fa-circle-check');
       }
-    } else {
-      const newId = bikes.length? Math.max(...bikes.map(b=> Number(b.id)||0))+1 : 1;
-      const data = collectForm(newId);
-      const newBike = { id:newId,...data };
-      bikes.unshift(newBike);
-      showToast('Bike added successfully','fa-circle-check');
+      saveToStorage(bikes);
+      closeModal();
+      render();
+    }catch(err){
+      showToast(err?.message || 'Could not save image','fa-circle-exclamation');
+    }finally{
+      if(saveBtn) saveBtn.disabled=false;
     }
-    saveToStorage(bikes);
-    closeModal();
-    render();
   }
 
   function confirmDelete(){
@@ -362,6 +420,20 @@
       render();
     }
   }
+
+  // Image upload / preview
+  document.getElementById('inputImageFile')?.addEventListener('change', async e=>{
+    const file=e.target.files?.[0];
+    if(!file){ setImagePreview(''); return; }
+    try{
+      const preview=await resizeImageFile(file,900,0.78);
+      setImagePreview(preview, file.name);
+    }catch(err){
+      e.target.value='';
+      setImagePreview('');
+      showToast(err?.message || 'Invalid image','fa-circle-exclamation');
+    }
+  });
 
   // Events
   searchInput?.addEventListener('input', e=>{ filterQ=e.target.value; render(); });
