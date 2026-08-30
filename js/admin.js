@@ -5,19 +5,27 @@
 (function(){
   const STORAGE_KEY = 'ebike_bikes';
   const BOOKINGS_KEY = 'ebike_bookings';
-  const FALLBACK_LOCAL = 'assets/images/bikes/bike-1.jpg'; // local placeholder you will add
+  const FALLBACK_LOCAL = 'assets/images/bikes/bike-01-1.jpg';
 
+  function canonicalImagePath(id, index=1){
+    const n = String(Number(id)||0).padStart(2,'0');
+    return `assets/images/bikes/bike-${n}-${index}.jpg`;
+  }
+  function canonicalizeImage(path, id, index=1){
+    if(!path || typeof path !== 'string') return canonicalImagePath(id,index);
+    const m = path.match(/bike-(\d+)(?:-(\d+))?\.jpg$/i);
+    if(m){
+      const fileId = String(Number(m[1])||0).padStart(2,'0');
+      const fileIndex = m[2] ? Number(m[2]) : 1;
+      return canonicalImagePath(fileId,fileIndex);
+    }
+    return path.startsWith('assets/') ? path : canonicalImagePath(id,index);
+  }
   function normalizeBike(b){
-    // Convert old structure (with fallback Unsplash) to local-only structure
-    const localImg = b.image && b.image.startsWith('assets/')? b.image : `assets/images/bikes/bike-${b.id}.jpg`;
-    const localImages = (b.images && b.images.length && b.images[0].startsWith('assets/'))
-     ? b.images
-      : [
-          `assets/images/bikes/bike-${b.id}.jpg`,
-          `assets/images/bikes/bike-${b.id}-2.jpg`,
-          `assets/images/bikes/bike-${b.id}-3.jpg`,
-          `assets/images/bikes/bike-${b.id}-4.jpg`
-        ];
+    const localImg = canonicalizeImage(b.image, b.id, 1);
+    const localImages = (Array.isArray(b.images) && b.images.length)
+      ? b.images.map((x,i)=>canonicalizeImage(x,b.id,i+1))
+      : [canonicalImagePath(b.id,1)];
     return {
       id: b.id,
       brand: b.brand,
@@ -216,10 +224,10 @@
     return ok;
   }
 
-  function collectForm(){
+  function collectForm(idForNewBike=null){
     const imgInput = $('#inputImage')?.value.trim() || '';
-    // Force local placeholder pattern — no Unsplash, no external
-    const img = imgInput.startsWith('assets/')? imgInput : (imgInput? imgInput : FALLBACK_LOCAL);
+    const fallback = idForNewBike ? canonicalImagePath(idForNewBike,1) : FALLBACK_LOCAL;
+    const img = imgInput.startsWith('assets/') ? canonicalizeImage(imgInput, idForNewBike || 1, 1) : fallback;
     return {
       brand: $('#inputBrand').value.trim(),
       model: $('#inputModel').value.trim(),
@@ -232,7 +240,7 @@
       condition: $('#inputCondition').value,
       status: $('#inputStatus').value,
       image: img,
-      images: [img, img.replace('.jpg','-2.jpg'), img.replace('.jpg','-3.jpg'), img.replace('.jpg','-4.jpg')],
+      images: [1,2,3,4].map(i=>canonicalImagePath(idForNewBike || 1,i)),
       description: $('#inputDesc').value.trim(),
     };
   }
@@ -277,15 +285,21 @@
 
   function saveBike(){
     if(!validateForm()){ showToast('Please fix highlighted fields','fa-circle-exclamation'); return; }
-    const data = collectForm();
     if(editingId){
       const idx = bikes.findIndex(b=> String(b.id)===String(editingId));
       if(idx>=0){
-        bikes[idx] = {...bikes[idx],...data, id:bikes[idx].id };
+        const current = bikes[idx];
+        const data = collectForm(current.id);
+        if(!$('#inputImage')?.value.trim()){
+          data.image = current.image || canonicalImagePath(current.id,1);
+          data.images = Array.isArray(current.images) && current.images.length ? current.images : [data.image];
+        }
+        bikes[idx] = {...current,...data,id:current.id};
         showToast('Bike updated successfully','fa-circle-check');
       }
     } else {
       const newId = bikes.length? Math.max(...bikes.map(b=> Number(b.id)||0))+1 : 1;
+      const data = collectForm(newId);
       const newBike = { id:newId,...data };
       bikes.unshift(newBike);
       showToast('Bike added successfully','fa-circle-check');
